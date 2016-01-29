@@ -85,7 +85,7 @@ function (
                 layers: layers
             };
         },
-        getAngularScopeParams: function () {
+        getAngularScopeParams: function () {   //Set Map centered
             var deferred = $q.defer();
 
             this.getConfig().then(function (config) {
@@ -97,8 +97,8 @@ function (
                 deferred.resolve({
                     layers: localLayers,
                     center: {
-                        lat: config.default_view.lat,
-                        lng: config.default_view.lon,
+                        lat: 23,  //config.default_view.lat
+                        lng: 120,  //config.default_view.lon
                         zoom: config.default_view.zoom
                     }
                 });
