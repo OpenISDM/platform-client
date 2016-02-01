@@ -97,8 +97,8 @@ function (
                 deferred.resolve({
                     layers: localLayers,
                     center: {
-                        lat: config.default_view.lat,
-                        lng: config.default_view.lon,
+                        lat: 20,//config.default_view.lat,
+                        lng: 120,//config.default_view.lon,
                         zoom: config.default_view.zoom
                     }
                 });
