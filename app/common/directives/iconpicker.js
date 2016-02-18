@@ -1,6 +1,7 @@
 /**
  * Ushahidi Angular Icon Pocker directive
  * Based on the Angular Bootstrap Icon Picker directive
+ * The page is http://localhost:8080/settings/categories/create - Jim
  */
 
 module.exports = [

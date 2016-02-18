@@ -1,5 +1,6 @@
 /**
  * Ushahidi Off Canvas Menu
+ * I can't understand how to use thie js function - 2/18.Jim
  */
 
 angular.module('ushahidi.common.offcanvas', [])

@@ -1,6 +1,7 @@
 /**
  * Ushahidi Angular Modal directive
  * Based on the Angular Bootstrap Modal directive
+ * The modal.html which is in all pop up window, like "Collection Settings"
  */
 angular.module('ushahidi.common.modal', [])
 
