@@ -13,5 +13,6 @@ function (
             values: {},
             completed_stages: []
         }, data);
+        
     };
 }];

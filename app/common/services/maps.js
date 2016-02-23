@@ -52,13 +52,16 @@ function (
 
     var geojsonLayerOptions = {
         onEachFeature: function (feature, layer) {
+            console.log(feature);
             var description = feature.properties.description || '',
-                title = feature.properties.title || feature.properties.id;
+                title = feature.properties.title || feature.properties.id
+                collections = feature.properties.sets;
             layer.bindPopup(
                 '<strong><a href="/posts/' + feature.properties.id + '">' +
                 title +
                 '</a></strong>' +
-                '<p>' + description + '</p>'
+                '<p>' + description + '</p>' +
+                '<p>' + collections + '</p>'
             );
         }
     };
@@ -165,6 +168,8 @@ function (
                 ;
         },
         setGeojsonLayer: function (posts) {
+            //console.log("== post ==")
+            //console.log(posts);
             this.layers.geojson = L.geoJson(posts, geojsonLayerOptions);
         },
         clearOldMarkers: function () {
