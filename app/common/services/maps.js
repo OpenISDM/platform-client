@@ -55,13 +55,15 @@ function (
             console.log(feature);
             var description = feature.properties.description || '',
                 title = feature.properties.title || feature.properties.id
-                collections = feature.properties.sets;
+                collections_id = feature.properties.sets;
+                collections_name = feature.properties.set_name;
             layer.bindPopup(
                 '<strong><a href="/posts/' + feature.properties.id + '">' +
                 title +
                 '</a></strong>' +
                 '<p>' + description + '</p>' +
-                '<p>' + collections + '</p>'
+                '<p>' + collections_id + '</p>' +
+                '<p>' + collections_name + '</p>'
             );
         }
     };
