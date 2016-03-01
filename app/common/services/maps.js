@@ -97,9 +97,12 @@ function (
                 deferred.resolve({
                     layers: localLayers,
                     center: {
-                        lat: 20,//config.default_view.lat,
-                        lng: 120,//config.default_view.lon,
-                        zoom: config.default_view.zoom
+                        // Change center to Taipei
+                        lat: 23.7,//config.default_view.lat,
+                        lng: 121,//config.default_view.lon,
+                        // Change default zoom scale
+                        // zoom: config.default_view.zoom
+                        zoom: 8
                     }
                 });
             });
