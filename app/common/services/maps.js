@@ -56,14 +56,15 @@ function (
             var description = feature.properties.description || '',
                 title = feature.properties.title || feature.properties.id
                 collections_id = feature.properties.sets;
-                collections_name = feature.properties.set_name;
+                //collections_name = feature.properties.set_names.toString();
+                //set_name = Integer.valueOf();
+
             layer.bindPopup(
                 '<strong><a href="/posts/' + feature.properties.id + '">' +
                 title +
                 '</a></strong>' +
                 '<p>' + description + '</p>' +
-                '<p>' + collections_id + '</p>' +
-                '<p>' + collections_name + '</p>'
+                '<p>' + collections_id + '</p>'
             );
         }
     };
