@@ -58,10 +58,34 @@ function (
                 '<strong><a href="/posts/' + feature.properties.id + '">' +
                 title +
                 '</a></strong>' +
-                '<p>' + description + '</p>'
+                '<p>' + description + '</p>' +
+                // Show collections in popup
+                '<p> Collection: '+ feature.properties.set_name + '</p>'
+
             );
+            // alert(JSON.stringify(feature.properties.set_name, null, 4));
+            // Structure
+            // {
+            //     "title": "Taipei 101",
+            //     "description": null,
+            //     "id": 6,
+            //     "url": "http://192.168.33.110/api/v3/posts/6"
+            // }
+
         }
     };
+
+    /*
+    // GeoLocation API to get user's location
+    // Issue: get value after loading map
+    navigator.geolocation.getCurrentPosition(GetLocation);
+    function GetLocation(location) {
+    var usr_lat = location.coords.latitude.toFixed(4);
+    var usr_lng = location.coords.longitude.toFixed(4);
+    alert(usr_lat);
+    // alert(location.coords.accuracy);
+    }
+    */
 
     var Maps = {
         maps: {},
@@ -97,12 +121,17 @@ function (
                 deferred.resolve({
                     layers: localLayers,
                     center: {
-                        // Change center to Taipei
-                        lat: 23.7,//config.default_view.lat,
-                        lng: 121,//config.default_view.lon,
+                        // Change center to where you are
+                        // Can be set in the website.
+                        // lat: usr_lat,
+                        // lng: usr_lng,
+                        // lat: 120,
+                        // lng: 23,
+                        lat: config.default_view.lat,
+                        lng: config.default_view.lon,
                         // Change default zoom scale
-                        // zoom: config.default_view.zoom
-                        zoom: 8
+                        zoom: config.default_view.zoom
+                        // zoom: 7
                     }
                 });
             });

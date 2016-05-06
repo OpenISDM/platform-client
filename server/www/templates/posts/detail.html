@@ -1,3 +1,4 @@
+<!-- detail view of set posts -->
 <main class="page-content layout-c">
    <div class="main-col">
         <article role="article">
@@ -5,6 +6,8 @@
                 <h1 class="page-title">
                     {{post.title}}
                 </h1>
+                <h1>This line is only in post detail</h1>
+                <!-- The section "... can see this post" -->
                 <div class="page-permissions">
                     <p ng-show="post.allowed_privileges.indexOf('update') == -1">
                         <span class="icon-left fa-globe" translate>
@@ -45,6 +48,7 @@
                         <a href="#options" class="button-secondary init active" data-toggle="options"><span class="icon-left fa-ellipsis-h" translate>post.options</span></a>
                     </div>
                     <div id="options" class="actions-content init active">
+                        <!-- Edit button -->
                         <button ng-show="post.allowed_privileges.indexOf('update') !== -1" class="button-secondary" ng-click="goEdit()">
                             <span class="icon-left fa-pencil" translate>post.post_actions.edit</span>
                         </button>
@@ -52,6 +56,7 @@
                             <span class="icon-left fa-share">Share</span>
                         </button>
                     -->
+                        <!-- Choose collection button -->
                         <fieldset ng-if="post.allowed_privileges.indexOf('update') !== -1" dropdown auto-close="outsideClick" ng-show="editableCollections.length > 0 || post.allowed_privilleges.indexOf('update') != 1" class="custom-fieldset init">
                             <legend data-toggle="dropdown-menu" class="dropdown-trigger init" dropdown-toggle>
                                 <span class="icon-left fa-th" translate>global_filter.collections.collections</span>
@@ -81,6 +86,7 @@
                     </div>
                 </div>
             </header>
+            <!-- Label name on the right side -->
             <div class="vertical-tabs">
                 <nav class="vertical-tabs-menu init">
                     <ul>
