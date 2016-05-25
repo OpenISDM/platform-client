@@ -60,6 +60,18 @@ function (
                 '</a></strong>' +
                 '<p>' + description + '</p>'
             );
+        },
+        // Custom marker
+        pointToLayer: function (feature, latlng) {
+            var vectorMarker = L.VectorMarkers.icon({
+                icon: feature.properties['marker-symbol'],
+                prefix: 'fa',
+                spin: false,
+                markerColor: feature.properties['marker-color']
+            });
+            return L.marker(latlng, {
+                icon: vectorMarker
+            });
         }
     };
 
