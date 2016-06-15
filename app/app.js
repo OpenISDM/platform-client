@@ -17,6 +17,7 @@ require('checklist-model/checklist-model');
 require('selection-model/dist/selection-model');
 require('ngGeolocation/ngGeolocation');
 require('ng-showdown/src/ng-showdown');
+require('Leaflet.vector-markers');
 window.d3 = require('d3'); // Required for nvd3
 window.dc = require('dc'); // Required for charting used in activity page
 require('./common/wrapper/nvd3-wrapper');
