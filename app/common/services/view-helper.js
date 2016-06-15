@@ -1,30 +1,42 @@
 module.exports = [
     '_',
+    'Features',
+    '$translate',
+    '$q',
 function (
-    _
+    _,
+    Features,
+    $translate,
+    $q
 ) {
     var allViews = [
             {
                 name: 'map',
-                display_name: 'Map'
+                display_name: $translate.instant('views.map')
             },
             {
                 name: 'list',
-                display_name: 'List'
+                display_name: $translate.instant('views.list')
             },
             {
-                name: 'chart',
-                display_name: 'Chart'
-            },
-            {
-                name: 'timeline',
-                display_name: 'Timeline'
+                name: 'activity',
+                display_name: $translate.instant('views.activity')
             }
+            // {
+            //     name: 'chart',
+            //     display_name: $translate.instant('views.chart')
+            // },
+            // {
+            //     name: 'timeline',
+            //     display_name: $translate.instant('views.timeline')
+            // }
         ],
+        availableViews = [],
+        availableViewsDeferred = $q.defer(),
 
-    PostViewHelper = {
-        views: function () {
-            return allViews;
+    ViewHelper = {
+        views: function (allViews) {
+            return allViews ? allViews : availableViews;
         },
         getView: function (view, views) {
             if (!views) {
@@ -32,6 +44,11 @@ function (
             }
             var match = _.findWhere(views, {name: view});
             return match ? match.display_name : view;
+        },
+        isViewAvailable: function (view) {
+            return availableViewsDeferred.promise.then(function (availableViews) {
+                return _.findWhere(availableViews, {name: view});
+            });
         },
         getDefault: function (views) {
             if (!views) {
@@ -43,5 +60,20 @@ function (
             return match ? match.display_name : 'Map';
         }
     };
-    return PostViewHelper;
+
+    // Push available views into array
+    // Rely on JS magic to
+    var populateAvailableView = function (featureConfig) {
+        _.each(allViews, function (view) {
+            if (featureConfig.views[view.name]) {
+                availableViews.push(view);
+            }
+        });
+        availableViewsDeferred.resolve(availableViews);
+    };
+    Features.loadFeatures().then(function (features) {
+        populateAvailableView(features);
+    });
+
+    return ViewHelper;
 }];

@@ -90,7 +90,11 @@ function (
 
                 searchLocation: function () {
                     var that = this;
+                    $scope.processing = true;
+
                     Geocoding.search($scope.searchLocationTerm).then(function (coordinates) {
+                        $scope.processing = false;
+
                         if (!coordinates) {
                             return;
                         } // @todo - handle lookup error
@@ -123,9 +127,12 @@ function (
                     $scope.updateLatLon(lat, lon);
                 }
 
-                Leaflet.control.locate({
-                    follow: true
-                }).addTo(map);
+                // Add locate control, but only on https
+                if (window.location.protocol === 'https:' || window.location.hostname === 'localhost') {
+                    Leaflet.control.locate({
+                        follow: true
+                    }).addTo(map);
+                }
 
                 // treate locationfound same as map click
                 map.on('locationfound', onMapClick);

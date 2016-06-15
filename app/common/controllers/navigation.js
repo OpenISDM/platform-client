@@ -1,58 +1,48 @@
-module.exports = [
-    '$scope',
-    'Authentication',
-    'ConfigEndpoint',
-    'BootstrapConfig',
-    '$rootScope',
-function (
-    $scope,
-    Authentication,
-    ConfigEndpoint,
-    BootstrapConfig,
-    $rootScope
-) {
-    $scope.isHome = true;
+module.exports = NavigationController;
 
-    // Start with preloaded config
-    $scope.site = BootstrapConfig;
-    // Then update from server
-    var reloadSiteConfig = function () {
-        ConfigEndpoint.get({ id: 'site' }).$promise.then(function (site) {
-            $scope.site = site;
+NavigationController.$inject = ['Authentication', 'ConfigEndpoint', 'BootstrapConfig', '$rootScope', 'Features'];
+function NavigationController(Authentication, ConfigEndpoint, BootstrapConfig, $rootScope, Features) {
+    var vm = this;
+
+    vm.site = BootstrapConfig;
+    vm.reloadSiteConfig = reloadSiteConfig;
+    //vm.canCreatePost = canCreatePost;
+    //vm.canRegister = canRegister;
+    //vm.logoutClick = logoutClick;
+
+    activate();
+
+    $rootScope.$on('event:update:header', reloadSiteConfig);
+
+    function activate() {
+        Features.loadFeatures().then(function () {
+            vm.activityIsAvailable = Features.isViewEnabled('activity');
+            vm.planIsAvailable = Features.isViewEnabled('plan');
         });
-    };
 
-    $rootScope.$on('event:update:header', function () {
         reloadSiteConfig();
-    });
+    }
 
-    $rootScope.$on('$routeChangeSuccess', function (ev, current) {
-        if (current && current.$$route &&
-                (current.$$route.originalPath === '/views/:view?' || current.$$route.originalPath === '/')
-            ) {
-            $scope.isHome = true;
-        } else {
-            $scope.isHome = false;
-        }
-    });
+    function reloadSiteConfig() {
+        ConfigEndpoint.get({ id: 'site' }).$promise.then(function (site) {
+            vm.site = site;
+        });
+    }
 
-    reloadSiteConfig();
+    // Move to add post button (or associated service)
+    // function canCreatePost() {
+    //     return $rootScope.loggedin || !vm.site.private;
+    // };
 
-    // @todo: Integrate the modal state controller into a globally accessible
-    // directive which binds the same logic but does not effect markup.
-    // This is related to the same functionality in the set controller
-    // collections-controller.js
-    $scope.collectionOpen = {};
-    $scope.collectionOpen.data = false;
-    $scope.collectionIsOpen = function () {
-        $scope.collectionOpen.data = !$scope.collectionOpen.data;
-    };
+    // Move to mode bar (or associated service)
+    // function canRegister() {
+    //     return !vm.site.private;
+    // };
 
-
-    $scope.logoutClick = function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        Authentication.logout();
-    };
-
-}];
+    // Move to mode bar (or associated service)
+    // function logoutClick(e) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     Authentication.logout();
+    // };
+}

@@ -39,18 +39,18 @@ function (
         }
     });
 
-    FormStageEndpoint.getFresh = function (id) {
-        cache.remove(Util.apiUrl(id));
-        return FormStageEndpoint.get(id);
+    FormStageEndpoint.getFresh = function (params) {
+        cache.remove(Util.apiUrl('/forms/' + params.formId + '/stages/' + params.id));
+        return FormStageEndpoint.get(params);
     };
 
     FormStageEndpoint.invalidateCache = function () {
         return cache.removeAll();
     };
 
-    FormStageEndpoint.queryFresh = function () {
+    FormStageEndpoint.queryFresh = function (params) {
         cache.removeAll();
-        return FormStageEndpoint.query();
+        return FormStageEndpoint.query(params);
     };
 
     FormStageEndpoint.saveCache = function (item) {

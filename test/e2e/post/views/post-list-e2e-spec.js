@@ -4,13 +4,13 @@ describe('post detail interaction', function () {
         postLink = '.post-text a',
         postSelectSelector = '.select-post input',
         postCheckedSelectSelector = '.select-post input:checked',
-        deleteButtonSelector = '.bulk-actions button',
+        bulkActionButtonSelector = '.bulk-actions button',
         openCreateCollectionButton = '.form-field.bar a',
         createCollectionButton = '.form-field.bar button',
         postCollectionsButtonSelector = '.actions-content .dropdown-trigger.init.dropdown-toggle',
         postCollectionsMenuSelector = '.actions-content .dropdown-menu.init',
         collectionItem = '.form-field.checkbox input',
-        visibilityButtonsSelector = '.step select',
+        visibilityButtonsSelector = '.step legend',
         confirmationMessageSelector = '.confirmation-message-wrapper p';
 
     describe('as a logged in admin user', function () {
@@ -37,20 +37,20 @@ describe('post detail interaction', function () {
 
             describe('when clicking a visibility option', function () {
                 beforeEach(function () {
-                    var optionElement = visibilitySelect.element(by.cssContainingText('option', 'Member'));
+                    var optionElement = element.all(by.css('.step .radio input')).get(1);
                     optionElement.click();
 
                 });
                 it('should set the visibility of the post and display a confirmation', function () {
                     var confirmMessage = element(by.css(confirmationMessageSelector));
-                    expect(confirmMessage.getInnerHtml()).toEqual('Post has been published for Member');
+                    expect(confirmMessage.getInnerHtml()).toEqual('Post has been published for everyone');
                 });
             });
         });
 
         describe('checking bulk edit actions', function () {
             it('the delete button should initially be disabled', function () {
-                var deleteButton = element(by.css(deleteButtonSelector));
+                var deleteButton = element.all(by.css(bulkActionButtonSelector)).get(1);
                 expect(deleteButton.isEnabled()).toEqual(false);
             });
 
@@ -61,15 +61,15 @@ describe('post detail interaction', function () {
                 });
 
                 it('should enable the delete button', function () {
-                    var deleteButton = element(by.css(deleteButtonSelector));
+                    var deleteButton = element.all(by.css(bulkActionButtonSelector)).get(1);
                     expect(deleteButton.isEnabled()).toEqual(true);
                 });
 
                 describe('when clicking the delete button', function () {
                     beforeEach(function () {
-                        var deleteButton = element(by.css(deleteButtonSelector));
+                        var deleteButton = element.all(by.css(bulkActionButtonSelector)).get(1);
                         deleteButton.click();
-                        browser.sleep(500);
+                        browser.sleep(200);
                     });
 
                     it('should ask to confirm the post\'s deletion', function () {
@@ -80,7 +80,7 @@ describe('post detail interaction', function () {
                         beforeEach(function () {
                             var confirmModal = element(by.css('button#confirm-modal-ok'));
                             confirmModal.click();
-                            browser.sleep(500);
+                            browser.sleep(200);
                         });
 
                         it('should show a deletion confirmation message', function () {
@@ -114,15 +114,15 @@ describe('post detail interaction', function () {
                 });
 
                 it('should enable the delete button', function () {
-                    var deleteButton = element(by.css(deleteButtonSelector));
+                    var deleteButton = element.all(by.css(bulkActionButtonSelector)).get(1);
                     expect(deleteButton.isEnabled()).toEqual(true);
                 });
 
                 describe('when clicking delete', function () {
                     beforeEach(function () {
-                        var deleteButton = element(by.css(deleteButtonSelector));
+                        var deleteButton = element.all(by.css(bulkActionButtonSelector)).get(1);
                         deleteButton.click();
-                        browser.sleep(500);
+                        browser.sleep(200);
                     });
 
                     it('should ask to confirm deletion', function () {
@@ -253,7 +253,7 @@ describe('post detail interaction', function () {
                 });
 
                 it('should not be possible to see the delete button', function () {
-                    var deleteButton = element(by.css(deleteButtonSelector));
+                    var deleteButton = element(by.css(bulkActionButtonSelector)).get(1);
                     expect(deleteButton.toEqual(null));
                 });
             });

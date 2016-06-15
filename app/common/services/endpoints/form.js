@@ -19,6 +19,7 @@ function (
         query: {
             method: 'GET',
             isArray: true,
+            cache: cache,
             transformResponse: function (data /*, header*/) {
                 return Util.transformResponse(data).results;
             }
@@ -35,9 +36,9 @@ function (
         }
     });
 
-    FormEndpoint.getFresh = function (id) {
-        cache.remove(Util.apiUrl(id));
-        return FormEndpoint.get(id);
+    FormEndpoint.getFresh = function (params) {
+        cache.remove(Util.apiUrl('/forms/' + params.id));
+        return FormEndpoint.get(params);
     };
 
     FormEndpoint.invalidateCache = function () {

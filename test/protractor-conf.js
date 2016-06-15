@@ -17,7 +17,9 @@ var config = {
     },
 
     capabilities: {
-        'browserName': 'chrome'
+        browserName: 'chrome',
+        shardTestFiles: true,
+        maxInstances: 2
     },
 
     directConnect: true,

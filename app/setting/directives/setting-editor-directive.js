@@ -2,22 +2,28 @@ module.exports = [
     '$q',
     '$http',
     '$translate',
+    '$location',
     '$rootScope',
     'ConfigEndpoint',
     '_',
     'Notify',
+    'Maps',
     'Util',
     'Languages',
+    'Features',
 function (
     $q,
     $http,
     $translate,
+    $location,
     $rootScope,
     ConfigEndpoint,
     _,
     Notify,
+    Maps,
     Util,
-    Languages
+    Languages,
+    Features
 ) {
     return {
         restrict: 'E',
@@ -26,12 +32,18 @@ function (
             formId: '@',
             formTemplate: '@'
         },
-        templateUrl: 'templates/settings/settings-editor.html',
+        templateUrl: 'templates/settings/general/settings-editor.html',
         link: function ($scope, $element, $attrs) {
             $scope.saving_config = false;
+            $scope.map = {};
+
             $scope.fileContainer = {
                 file : null
             };
+
+            Features.loadFeatures().then(function () {
+                $scope.isPrivateEnabled = Features.isFeatureEnabled('private');
+            });
 
             $scope.site = ConfigEndpoint.get({ id: 'site' });
             $scope.userSavedSettings = false;
@@ -47,7 +59,21 @@ function (
             }
             $scope.timezones.push('UTC');
 
-            $scope.languages = Languages.languages;
+            Languages.then(function (languages) {
+                $scope.languages = languages;
+            });
+
+            $scope.changeLanguage = function (code) {
+                $translate.use(code).then(function (code) {
+                    Languages.then(function (languages) {
+                        angular.forEach(languages, function (language) {
+                            if (language.code === code) {
+                                $rootScope.rtlEnabled = language.rtl;
+                            }
+                        });
+                    });
+                });
+            };
 
             $scope.clearHeader = function () {
                 $scope.site.image_header = null;
@@ -56,6 +82,7 @@ function (
             var updateSiteHeader = function () {
                 $rootScope.$broadcast('event:update:header');
             };
+
             var uploadHeaderImage = function () {
                 var dfd = $q.defer();
 
@@ -88,20 +115,25 @@ function (
                 $scope.saving_config = true;
 
                 uploadHeaderImage().then(function () {
-                    ConfigEndpoint.saveCache($scope.site).$promise.then(function (result) {
+                    $q.all([
+                        ConfigEndpoint.saveCache($scope.site).$promise,
+                        ConfigEndpoint.saveCache($scope.map).$promise
+                    ]).then(function (result) {
                         $scope.saving_config = false;
                         updateSiteHeader();
-                        $translate('notify.general_settings.save_success').then(function (message) {
-                            Notify.showNotificationSlider(message);
-                        });
+                        Notify.notify('notify.general_settings.save_success');
                     }, function (errorResponse) {
-                        Notify.showApiErrors(errorResponse);
+                        Notify.apiErrors(errorResponse);
                         $scope.saving_config = false;
                     });
                 }, function (errorResponse) {
-                    Notify.showApiErrors(errorResponse);
+                    Notify.apiErrors(errorResponse);
                     $scope.saving_config = false;
                 });
+            };
+
+            $scope.cancel = function () {
+                $location.path('/settings');
             };
         }
     };

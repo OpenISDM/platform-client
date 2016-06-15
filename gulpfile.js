@@ -8,10 +8,10 @@ var gulp         = require('gulp'),
     notify       = require('gulp-notify'),
     source       = require('vinyl-source-stream'),
     browserify   = require('browserify'),
-    watchify    = require('watchify'),
+    watchify     = require('watchify'),
     envify       = require('envify/custom'),
     fs           = require('fs'),
-    karma        = require('karma').server,
+    KarmaServer  = require('karma').Server,
     buffer       = require('vinyl-buffer'),
     uglify       = require('gulp-uglify'),
     sourcemaps   = require('gulp-sourcemaps'),
@@ -34,6 +34,7 @@ var defaultOptions = {
     mockBackend: false,
     useChromeForKarma : false,
     backendUrl: false,
+    intercomAppId: false,
     uglifyJs: true,
     compressedCSS: true
 };
@@ -53,6 +54,7 @@ var options = {
     mockBackend         : gutil.env['mock-backend'] || getBooleanOption(process.env.MOCK_BACKEND, defaultOptions.mockBackend),
     useChromeForKarma   : gutil.env['karma-chrome'] || getBooleanOption(process.env.KARMA_CHROME, defaultOptions.useChromeForKarma),
     backendUrl          : gutil.env['backend-url'] || process.env.BACKEND_URL,
+    intercomAppId       : gutil.env['intercom-app-id'] || process.env.INTERCOM_APP_ID,
     uglifyJs            : gutil.env['uglify-js'] || getBooleanOption(process.env.UGLIFY_JS, defaultOptions.uglifyJs),
     compressedCSS       : gutil.env['compressed-css'] || getBooleanOption(process.env.COMPRESSED_CSS, defaultOptions.compressedCSS),
     www                 : 'server/www'
@@ -81,7 +83,8 @@ var helpers = {
     },
     setBackendUrl: function () {
         return envify({
-            BACKEND_URL: options.backendUrl
+            BACKEND_URL: options.backendUrl,
+            INTERCOM_APP_ID: options.intercomAppId
         });
     },
     createDefaultTaskDependencies: function () {
@@ -145,13 +148,32 @@ gulp.task('css', [], function () {
         .pipe(gulp.dest(options.www + '/css'));
 });
 
-/** 
+/**
+ * Task: `svg-iconic-sprite`
+ * Move Iconic Sprite from pattern library into server/www/img
+ */
+gulp.task('svg-iconic-sprite', [], function () {
+    return gulp.src(['node_modules/platform-pattern-library/assets/img/iconic-sprite.svg'])
+        .pipe(gulp.dest(options.www + '/img'));
+});
+
+/**
+ * Task: `svg-icons`
+ * Move svg icons from pattern library into server/www/img
+ */
+gulp.task('svg-icons', [], function () {
+    return gulp.src(['node_modules/platform-pattern-library/assets/img/icons/**/*'])
+        .pipe(gulp.dest(options.www + '/img/icons'));
+});
+
+/**
  * Copy icon files for leaflet from node_modules into server/www/css/images
  */
 gulp.task('copy-leaflet-icons', [], function () {
     return gulp.src(['node_modules/leaflet/dist/images/*'])
         .pipe(gulp.dest(options.www + '/img'));
 });
+
 
 gulp.task('rename', [
     'copy-leaflet-icons'
@@ -233,14 +255,14 @@ function bundleBrowserify(stream) {
  * Task: `build`
  * Builds sass, fonts and js
  */
-gulp.task('build', ['sass', 'css', 'font', 'browserify']);
+gulp.task('build', ['sass', 'css', 'font', 'svg-iconic-sprite', 'svg-icons', 'browserify']);
 
 /**
  * Task: `watch`
  * Rebuilds styles and runs live reloading.
  */
 gulp.task('watch', ['watchify'], function () {
-    livereload.listen();
+    livereload.listen(35732);
     gulp.watch('sass/**/*.scss', ['sass']);
     gulp.watch('server/www/**/*.html', ['html']);
 });
@@ -265,11 +287,12 @@ gulp.task('node-server', [], require('./server/server'));
  */
 gulp.task('test', function (done) {
     var browsers = options.useChromeForKarma ? ['Chrome'] : ['PhantomJS'];
-    karma.start({
+    var server = new KarmaServer({
         configFile: __dirname + '/test/karma.conf.js',
         browsers: browsers,
         singleRun: true
     }, done);
+    server.start();
 });
 
 /**
@@ -287,20 +310,35 @@ gulp.task('send-stats-to-coveralls', function () {
  */
 gulp.task('tdd', function (done) {
     var browsers = options.useChromeForKarma ? ['Chrome'] : ['PhantomJS'];
-    karma.start({
+    var server = new KarmaServer({
         configFile: __dirname + '/test/karma.conf.js',
         browsers: browsers,
+        reporters: ['progress', 'notify'],
         autoWatch: true,
         singleRun: false
     }, done);
+    server.start();
 });
 
 /**
  * Run JSCS tests
  */
 gulp.task('jscs', function () {
-    return gulp.src(['app/**/*.js', 'test/**/*.js'])
-        .pipe(jscs());
+    return gulp.src(['app/**/*.js', 'test/**/*.js', 'gulpfile.js'])
+        .pipe(jscs())
+        .pipe(jscs.reporter())
+        .pipe(jscs.reporter('fail'));
+});
+gulp.task('jscsfix', ['jscsfix-app', 'jscsfix-test'], function () {});
+gulp.task('jscsfix-app', function () {
+    return gulp.src(['app/**/*.js'])
+        .pipe(jscs({ fix : true }))
+        .pipe(gulp.dest('app/'));
+});
+gulp.task('jscsfix-test', function () {
+    return gulp.src(['test/**/*.js'])
+        .pipe(jscs({ fix : true }))
+        .pipe(gulp.dest('test/'));
 });
 
 /**
@@ -364,6 +402,8 @@ gulp.task('transifex-download', function () {
         locales_dir = options.www + '/locales/',
         mode = 'default',
         resource = 'client-en',
+        // Get languages that are at least 90% translated
+        completion_threshold = 70,
         config = {};
 
     // Try to load user's ~/.transifexrc config
@@ -387,8 +427,8 @@ gulp.task('transifex-download', function () {
         credential: config.username + ':' + config.password
     });
 
-    // Download languages
-    transifex.languageSetMethod(project_slug, function (err, data) {
+    // Get language info
+    transifex.languageSetMethods(function (err, data) {
         if (err) {
             throw err;
         }
@@ -402,18 +442,45 @@ gulp.task('transifex-download', function () {
             }
         }
 
-        // Download translations for each language code
-        data.forEach(function (language) {
-            transifex.translationInstanceMethod(project_slug, resource, language.language_code, { mode: mode }, function (err, data) {
-                if (err) {
-                    throw err;
+        // Get language stats
+        transifex.statisticsMethods(project_slug, resource, function (err, stats) {
+            if (err) {
+                throw err;
+            }
+
+            // Only download languages that have been translated past the completion threshold
+            data = data.filter(function (language) {
+                if (stats[language.code] !== undefined && parseInt(stats[language.code].completed) >= completion_threshold) {
+                    return true;
                 }
 
-                fs.writeFileSync(locales_dir +
-                                 // Replace underscore with hyphen
-                                 language.language_code.replace('_', '-') +
-                                 '.json', data);
+                return false;
             });
+
+            // Download translations
+            data.forEach(function (language) {
+                transifex.translationInstanceMethod(project_slug, resource, language.code, { mode: mode }, function (err, data) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    fs.writeFileSync(locales_dir +
+                                     // Replace underscore with hyphen
+                                     language.code.replace('_', '-') +
+                                     '.json', data);
+                });
+            });
+
+
+            // Replace language code underscores with hyphens
+            var languages = data.map(function (language) {
+                language.code = language.code.replace('_', '-');
+                return language;
+            });
+
+            // Save translated language list
+            fs.writeFileSync(locales_dir + 'languages.json', JSON.stringify({languages: languages}));
+
         });
     });
 });
