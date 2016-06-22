@@ -237,14 +237,13 @@ function (
         },
         addNewRoutes: function () {
             this.map().then(function (map) {
-                var routingCtrl = L.Routing.control({
+                var routingCtrl = null;
+                routingCtrl = L.Routing.control({
                     waypoints: [
                     // Where can I get points?
                         L.latLng(25.05, 121.53),
-                        L.latLng(25.04, 121.58),
                         L.latLng(25.05, 121.61),
                         L.latLng(25.05, 121.53)
-
                     ],
                     createMarker: function () {
                         return null;
@@ -261,7 +260,6 @@ function (
                 }).addTo(map);
                 routingCtrl.hide();
             });
-
         }
 
     };
