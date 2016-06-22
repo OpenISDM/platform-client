@@ -237,23 +237,29 @@ function (
         },
         addNewRoutes: function () {
             this.map().then(function (map) {
-                // Change to Line
-                var route = L.Routing.control({
+                var routingCtrl = L.Routing.control({
                     waypoints: [
                     // Where can I get points?
                         L.latLng(25.05, 121.53),
-                        L.latLng(25.05, 121.61)
+                        L.latLng(25.04, 121.58),
+                        L.latLng(25.05, 121.61),
+                        L.latLng(25.05, 121.53)
+
                     ],
                     createMarker: function () {
                         return null;
                     },
-                    fitSelectedRoutes: false,
-                    addWaypoints: false
-
-                    // color
-
+                    fitSelectedRoutes: true,
+                    lineOptions: {
+                        styles: [
+                                { color: 'black', opacity: 0.15, weight: 9 },
+                                { color: 'white', opacity: 0.8, weight: 6 },
+                                { color: 'blue', opacity: 1, weight: 2 }
+                                ],
+                        addWaypoints: false
+                    }
                 }).addTo(map);
-                route.hide();
+                routingCtrl.hide();
             });
 
         }
