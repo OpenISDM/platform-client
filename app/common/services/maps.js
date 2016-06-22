@@ -176,6 +176,7 @@ function (
             this.clearOldMarkers()
                 .then(_.partial(this.setGeojsonLayer, posts))
                 .then(this.addNewMarkers)
+                .then(this.addNewRoutes)
                 ;
         },
         setGeojsonLayer: function (posts) {
@@ -233,7 +234,31 @@ function (
                     }
                 });
             }, this));
+        },
+        addNewRoutes: function() {
+ 
+            this.map().then(function(map) {
+                // Change to Line
+                var route = L.Routing.control({
+                    waypoints: [
+                    // Where can I get points?
+                        L.latLng(25.05, 121.53),
+                        L.latLng(25.05, 121.61)
+                    ],
+                    createMarker: function() {
+                        return null;
+                    },
+                    fitSelectedRoutes: false,
+                    addWaypoints: false,
+
+                    // color
+
+                }).addTo(map);
+                route.hide();
+            });
+
         }
+
     };
 
     Util.bindAllFunctionsToSelf(Map);

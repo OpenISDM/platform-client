@@ -53,6 +53,22 @@ function (
         // Initial load
         reloadMapPosts();
 
+        // leafletData.getMap().then(function(map) {
+        //     $scope.routingControl = L.Routing.control({
+        //         waypoints: [
+        //             L.latLng(25.05, 121.55),
+        //             L.latLng(25.04, 121.54)
+                    
+        //         ],
+        //         createMarker: function() {
+        //             return null;
+        //         },
+        //         fitSelectedRoutes: false,
+        //         addWaypoints: false,
+        //     }).addTo(map);
+        //     $scope.routingControl.hide();
+        // });
+
         $scope.$on('$destroy', function () {
             Maps.destroyMap('map');
         });

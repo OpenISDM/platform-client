@@ -103,7 +103,8 @@
     "nvd3": "^1.8.3",
     "platform-pattern-library": "ushahidi/platform-pattern-library#mustang",
     "selection-model": "jtrussell/angular-selection-model.git",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "leaflet-routing-machine": "^3.0.3"
   },
   "engines": {
     "node": ">=0.10"

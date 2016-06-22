@@ -21,6 +21,7 @@ window.d3 = require('d3'); // Required for nvd3
 require('./common/wrapper/nvd3-wrapper');
 require('angular-nvd3/src/angular-nvd3');
 require('angular-cache');
+require('leaflet-routing-machine');
 
 // Load ushahidi modules
 require('./frame/frame-module.js');
