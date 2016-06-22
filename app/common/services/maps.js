@@ -235,9 +235,8 @@ function (
                 });
             }, this));
         },
-        addNewRoutes: function() {
- 
-            this.map().then(function(map) {
+        addNewRoutes: function () {
+            this.map().then(function (map) {
                 // Change to Line
                 var route = L.Routing.control({
                     waypoints: [
@@ -245,11 +244,11 @@ function (
                         L.latLng(25.05, 121.53),
                         L.latLng(25.05, 121.61)
                     ],
-                    createMarker: function() {
+                    createMarker: function () {
                         return null;
                     },
                     fitSelectedRoutes: false,
-                    addWaypoints: false,
+                    addWaypoints: false
 
                     // color
 

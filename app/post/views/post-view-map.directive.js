@@ -58,7 +58,6 @@ function (
         //         waypoints: [
         //             L.latLng(25.05, 121.55),
         //             L.latLng(25.04, 121.54)
-                    
         //         ],
         //         createMarker: function() {
         //             return null;
