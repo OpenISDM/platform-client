@@ -3,6 +3,7 @@ require('angular-route');
 require('leaflet');
 require('leaflet.markercluster');
 require('leaflet.locatecontrol/src/L.Control.Locate');
+require('leaflet-draw');
 require('angular-leaflet-directive');
 require('angular-resource');
 require('angular-translate');
@@ -31,6 +32,7 @@ require('./setting/setting-module.js');
 require('./plans/plans-module.js');
 require('./set/set-module.js');
 require('./user-profile/user-profile-module.js');
+require('./region/region-module.js');
 
 // Make sure we have a window.ushahidi object
 window.ushahidi = window.ushahidi || {};
@@ -83,7 +85,8 @@ angular.module('app',
         'ushahidi.plans',
         'ushahidi.sets',
         'ushahidi.activity',
-        'ushahidi.user-profile'
+        'ushahidi.user-profile',
+        'ushahidi.region'
     ])
 
     .constant('CONST', {
