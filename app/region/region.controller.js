@@ -15,7 +15,12 @@ module.exports = [
         angular.extend($scope, {
             controls: {
                 scale: true,
-                draw: {}
+                draw: {
+                    marker: false,
+                    polyline: false,
+                    circle: false
+                }
+
             }
         });
 
@@ -32,19 +37,26 @@ module.exports = [
             }
         });
 
-        console.log($scope);
+        // console.log($scope);
 
-        leafletData.getMap().then(function (map) {
-            // console.log("getmap");
+        leafletData.getMap('map').then(function (map) {
             leafletData.getLayers().then(function (baselayers) {
                 var drawnItems = baselayers.overlays.draw;
-                // console.log("getlayer");
                 map.on('draw:created', function (e) {
-
                     var layer = e.layer;
                     drawnItems.addLayer(layer);
                     console.log(JSON.stringify(layer.toGeoJSON()));
                 });
+
+                // map.on('draw:deleted', function(e) {
+                //     var layers = e.layers;
+                //     layers.eachLayer(function(layer) {
+                //         if (layer.hasLayer) {
+                //             layer.removeLayer(feature);
+                //         }
+                //     });
+                // });
+
             });
         });
 
