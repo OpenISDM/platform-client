@@ -27,6 +27,19 @@ function (
     $rootScope,
     CONST
 ) {
+    // Ushahidi platform IP and SockIO port
+    var socket = io('http://192.168.33.110:2020');
+    socket.on('update display', function(data) {
+        // str = JSON.stringify(data);
+        if (data.post_id === null) {}
+        else {
+            console.log('Updated post id:' + data.post_id);
+            Maps.getMap('map').addNewMarkers();
+            // var geojson = PostEndpoint.geojson({id: data.post_id});
+            // console.log(geojson);
+        }
+    });
+
     var layers = {
         baselayers : {
             satellite: {
