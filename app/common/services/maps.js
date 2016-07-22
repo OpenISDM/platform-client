@@ -36,7 +36,6 @@ function (
             console.log('Updated post id:' + data.post_id);
             Maps.getMap('map').addNewMarkers();
             // var geojson = PostEndpoint.geojson({id: data.post_id});
-            // console.log(geojson);
         }
     });
 
