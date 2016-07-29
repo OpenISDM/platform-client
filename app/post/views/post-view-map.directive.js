@@ -58,7 +58,7 @@ function (
         // Ushahidi platform IP and SockIO port 192.168.33.110:2020
         var socket;
         if (!socket) {
-            socket = io('http://192.168.33.110:2020');
+            socket = io('//192.168.33.110:2020');
         }
         socket.on('update post', function(data) {
             // console.log(data);
