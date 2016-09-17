@@ -51,7 +51,9 @@ function (
                 });
 
                 ConfigEndpoint.get({id: 'site'}, function (site) {
-                    $scope.canRegister = !site.private;
+                    // $scope.canRegister = !site.private;
+                    // Cannot register in this version of ushahidi (register in VMS)
+                    $scope.canRegister = false;
                 });
             }
 
