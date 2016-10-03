@@ -94,7 +94,9 @@ function (
                     var scope = $rootScope.$new();
 
                     // details.content = $filter('truncate')(details.content, 150, '...', true);
+                    // details.content = "You can change the popup content here. But need to access to API to get other data";
                     scope.post = details;
+                    // console.log(scope)
 
                     var el = $compile('<post-card post="post" short-content="true"></post-card>')(scope);
 
