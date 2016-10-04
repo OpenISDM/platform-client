@@ -134,7 +134,8 @@ function (
                 }
 
                 // Add locate control, but only on https
-                if (window.location.protocol === 'https:' || window.location.hostname === 'localhost') {
+                // delete https limitation
+                if (window.location.protocol === 'https:' || window.location.protocol === 'http:' || window.location.hostname === 'localhost') {
                     Leaflet.control.locate({
                         follow: true
                     }).addTo(map);
