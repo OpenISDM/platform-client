@@ -10,6 +10,24 @@ module.exports = [function () {
                         },
                         getMaxZoom: function () {
                             return 0;
+                        },
+                        getZoom: function () {
+                            return 0;
+                        },
+                        fitBounds: function () {},
+                        attributionControl: {
+                            setPrefix: function () {}
+                        }
+                    });
+                }
+            };
+        },
+        getGeoJSON : function () {
+            return {
+                then: function (successCallback, failCallback) {
+                    successCallback({
+                        getBounds: function () {
+                            return [];
                         }
                     });
                 }

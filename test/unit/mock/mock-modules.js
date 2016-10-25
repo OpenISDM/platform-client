@@ -6,6 +6,7 @@ angular.module('ushahidi.mock', [])
 
 .service('PostEndpoint', require('./services/post.js'))
 .service('FormEndpoint', require('./services/form.js'))
+.service('FormRoleEndpoint', require('./services/form-role.js'))
 .service('FormStageEndpoint', require('./services/form-stages.js'))
 .service('FormAttributeEndpoint', require('./services/form-attributes.js'))
 .service('TagEndpoint', require('./services/tag.js'))
@@ -33,7 +34,10 @@ angular.module('ushahidi.mock', [])
 .service('PostActionsService', require('./services/post-actions-service.js'))
 .service('PostEditService', require('./services/post-edit-service.js'))
 .service('PostViewService', require('./services/post-view-service.js'))
+.service('PostMetadataService', require('./services/post-metadata-service.js'))
 .service('Notify', require('./services/notify.js'))
+.service('ImportNotify', require('./services/importnotify.js'))
+.service('PostSurveyService', require('./services/post-survey-service.js'))
 
 .controller('navigation', require('./controllers/navigation.controller.mock.js'))
 ;

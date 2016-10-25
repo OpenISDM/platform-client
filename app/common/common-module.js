@@ -1,12 +1,9 @@
 angular.module('ushahidi.common', [
     'ushahidi.common.adaptive-input',
     'ushahidi.common.dropdown',
-    'ushahidi.common.accordion',
-    'ushahidi.common.offcanvas',
     'ushahidi.common.modal',
     'ushahidi.common.custom-on-change',
-    'ushahidi.common.file-upload',
-    'ushahidi.common.sticky-sidebar'
+    'ushahidi.user-profile'
 ])
 
 // Authentication
@@ -31,6 +28,7 @@ angular.module('ushahidi.common', [
 .service('UserEndpoint', require('./services/endpoints/user-endpoint.js'))
 .service('FormEndpoint', require('./services/endpoints/form.js'))
 .service('FormAttributeEndpoint', require('./services/endpoints/form-attributes.js'))
+.service('FormRoleEndpoint', require('./services/endpoints/form-roles.js'))
 .service('FormStageEndpoint', require('./services/endpoints/form-stages.js'))
 .service('TagEndpoint', require('./services/endpoints/tag.js'))
 .service('RoleEndpoint', require('./services/endpoints/role.js'))
@@ -38,14 +36,17 @@ angular.module('ushahidi.common', [
 .service('DataProviderEndpoint', require('./services/endpoints/data-providers.js'))
 .service('MediaEndpoint', require('./services/endpoints/MediaEndpoint.js'))
 .service('MessageEndpoint', require('./services/endpoints/message.js'))
+.service('PostEndpoint', require('./services/endpoints/post-endpoint.js'))
+.service('CollectionEndpoint', require('./services/endpoints/collection.js'))
+.service('SavedSearchEndpoint', require('./services/endpoints/savedsearch.js'))
+.service('DataImportEndpoint', require('./services/endpoints/data-import.js'))
+.service('ContactEndpoint', require('./services/endpoints/contact.js'))
+.service('NotificationEndpoint', require('./services/endpoints/notification.js'))
 
 // Other services
 .service('ViewHelper', require('./services/view-helper.js'))
 .service('Features', require('./services/features.js'))
 .service('Util', require('./services/util.js'))
-.service('DataRetriever', require('./services/data-retriever.js'))
-.service('multiTranslate', require('./services/multi-translate.js'))
-.service('GlobalFilter', require('./services/global-filter.js'))
 .service('Maps', require('./services/maps.js'))
 .service('Geocoding', require('./services/geocoding.js'))
 .service('Languages', require('./services/languages.js'))
@@ -77,6 +78,9 @@ angular.module('ushahidi.common', [
 .directive('filterSearchbar', require('./directives/filter-system/filter-searchbar.js'))
 .directive('filterRole', require('./directives/filter-system/filter-role.js'))
 .directive('overflowToggle', require('./directives/filter-system/overflow-toggle.js'))
+.directive('focus', require('./directives/focus.js'))
+.directive('modeBar', require('./directives/mode-bar/mode-bar.directive.js'))
+.directive('fileUpload', require('./directives/file-upload.directive.js'))
 
 // Event actions
 .constant('EVENT', {
@@ -100,9 +104,6 @@ angular.module('ushahidi.common', [
 // Load submodules
 require('./directives/adaptive-input.js');
 require('./directives/dropdown.js');
-require('./directives/accordion.js');
-require('./directives/offcanvas.js');
 require('./directives/modal.js');
 require('./directives/custom-on-change.js');
-require('./directives/file-upload.js');
-require('./directives/sticky-sidebar.js');
+require('./user-profile/user-profile-module.js');

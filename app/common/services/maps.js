@@ -6,6 +6,12 @@ module.exports = [
     'leafletData',
     '_',
     '$filter',
+    'PostEndpoint',
+    'FormAttributeEndpoint',
+    'MediaEndpoint',
+    '$compile',
+    '$rootScope',
+    'CONST',
 function (
     $q,
     ConfigEndpoint,
@@ -13,27 +19,34 @@ function (
     L,
     LData,
     _,
-    $filter
+    $filter,
+    PostEndpoint,
+    FormAttributeEndpoint,
+    MediaEndpoint,
+    $compile,
+    $rootScope,
+    CONST
 ) {
-
     var layers = {
         baselayers : {
-            MapQuest: {
-                name: 'Map',
-                url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
+            satellite: {
+                name: 'Satellite',
+                url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
                 type: 'xyz',
                 layerOptions: {
-                    subdomains: '1234',
-                    attribution: 'Map data &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, Imagery &copy; <a href="http://info.mapquest.com/terms-of-use/">MapQuest</a>'
+                    apikey: CONST.MAPBOX_API_KEY,
+                    mapid: 'mapbox.satellite',
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>, &copy; <a href="https://www.mapbox.com/about/maps/"">Mapbox</a>'
                 }
             },
-            MapQuestAerial: {
-                name: 'Satellite',
-                url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png',
+            streets: {
+                name: 'Streets',
+                url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
                 type: 'xyz',
                 layerOptions: {
-                    subdomains: '1234',
-                    attribution: 'Map data &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, Imagery &copy; <a href="http://info.mapquest.com/terms-of-use/">MapQuest</a>'
+                    apikey: CONST.MAPBOX_API_KEY,
+                    mapid: 'mapbox.streets',
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>, &copy; <a href="https://www.mapbox.com/about/maps/"">Mapbox</a>'
                 }
             },
             hOSM: {
@@ -41,34 +54,62 @@ function (
                 url: 'http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
                 type: 'xyz',
                 layerOptions: {
-                    attribution: 'Map data &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>'
+                    attribution: 'Map data &copy; <a href="http://osm.org/copyright">OpenStreetMap</a>, Tiles <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>'
                 }
             }
         }
     };
+
     // Copy layersOptions to options to allow for differing formats
     // use by leaflet directive tiles vs layers
     angular.forEach(layers.baselayers, function (layer) {
         layer.options = layer.layerOptions;
     });
 
-    var geojsonLayerOptions = {
-        onEachFeature: function (feature, layer) {
-            var description = feature.properties.description || '',
-                title = feature.properties.title || feature.properties.id;
+    // Icon configuration
+    function pointIcon(feature, size, className) {
+        // Test string to make sure that it does not contain injection
+        var color = (feature.properties['marker-color'] && /^[a-zA-Z0-9#]+$/.test(feature.properties['marker-color'])) ? feature.properties['marker-color'] : '#959595';
 
-            layer.bindPopup(
-                '<article class="postcard">' +
-                    '<div class="post-band" style="background-color: #A51A1A;"></div>' +
-                    '<div class="postcard-body">' +
-                        '<h1 class="postcard-title"><a href="/posts/' + feature.properties.id + '">' + title + '</a></h1>' +
-                        '<div class="postcard-field">' +
-                        '<p>' + $filter('truncate')(description, 150, '...', true) + '</p>' +
-                        '</div>' +
-                    '</div>' +
-                '</article>'
-            );
+        return L.divIcon({
+            className: 'custom-map-marker ' + className,
+            html: '<svg class="iconic" style="fill:' + color + ';"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../../img/iconic-sprite.svg#map-marker"></use></svg><span class="iconic-bg" style="background-color:' + color + ';""></span>',
+            iconSize: size,
+            iconAnchor: [size[0] / 2, size[1]],
+            popupAnchor: [0, 0 - size[1]]
+        });
+    }
+
+    var geojsonLayerOptions = {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {
+                icon: pointIcon(feature, [32, 32])
+            });
+        },
+        onEachFeature: function (feature, layer) {
+            layer.on('click', function () {
+                var that = this;
+
+                getPostDetails(feature).then(function (details) {
+                    var scope = $rootScope.$new();
+
+                    // details.content = $filter('truncate')(details.content, 150, '...', true);
+                    scope.post = details;
+
+                    var el = $compile('<post-card post="post" short-content="true"></post-card>')(scope);
+
+                    that.bindPopup(el[0], {
+                        'minWidth': '300',
+                        'maxWidth': '300',
+                        'className': 'pl-popup'
+                    }).openPopup();
+                });
+            });
         }
+    };
+
+    var getPostDetails = function (feature) {
+        return PostEndpoint.get({id: feature.properties.id}).$promise;
     };
 
     var Maps = {
@@ -135,6 +176,13 @@ function (
         },
         reloadMapConfig: function () {
             return ConfigEndpoint.get({ id: 'map' }).$promise.then(_.bind(function (config) {
+                // Handle legacy layers
+                if (config.default_view.baselayer === 'MapQuest') {
+                    config.default_view.baselayer = 'streets';
+                }
+                if (config.default_view.baselayer === 'MapQuestAerial') {
+                    config.default_view.baselayer = 'satellite';
+                }
                 this.config = config;
                 return this.config;
             }, this));
@@ -154,6 +202,7 @@ function (
             // Disable 'Leaflet prefix on attributions'
             this.map().then(function (map) {
                 map.attributionControl.setPrefix(false);
+                map.setMaxBounds([[-90,-360],[90,360]]);
             });
 
             return this;
@@ -218,6 +267,11 @@ function (
 
                 this.map().then(function (map) {
                     map.addLayer(markers);
+                    map.on('popupopen', function (e) {
+                        var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
+                        px.y -= e.popup._container.clientHeight / 2; // find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+                        map.panTo(map.unproject(px), {animate: true}); // pan to new center
+                    });
 
                     if (config.default_view.fitDataOnMap === true) {
                         // Center map on geojson

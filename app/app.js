@@ -13,24 +13,21 @@ require('angular-sanitize');
 require('angular-elastic');
 require('angular-filter');
 require('angular-local-storage');
-require('checklist-model/checklist-model');
-require('selection-model/dist/selection-model');
+require('checklist-model');
 require('ngGeolocation/ngGeolocation');
-require('ng-showdown/src/ng-showdown');
+require('ng-showdown');
 window.d3 = require('d3'); // Required for nvd3
 require('./common/wrapper/nvd3-wrapper');
 require('angular-nvd3/src/angular-nvd3');
 require('angular-cache');
 
 // Load ushahidi modules
-require('./frame/frame-module.js');
 require('./common/common-module.js');
-require('./post/post-module.js');
-require('./activity/activity-module.js');
-require('./setting/setting-module.js');
-require('./plans/plans-module.js');
-require('./set/set-module.js');
-require('./user-profile/user-profile-module.js');
+require('./main/main-module.js');
+require('./settings/settings.module.js');
+
+// Stub ngRaven module incase its not configured
+angular.module('ngRaven', []);
 
 // Make sure we have a window.ushahidi object
 window.ushahidi = window.ushahidi || {};
@@ -71,19 +68,14 @@ angular.module('app',
         'angular-datepicker',
         'leaflet-directive',
         'angular.filter',
-        'showdown',
+        'ng-showdown',
         'ngGeolocation',
         'nvd3',
-        'selectionModel',
         'angular-cache',
-        'ushahidi.frame',
+        'ngRaven',
         'ushahidi.common',
-        'ushahidi.posts',
-        'ushahidi.tools',
-        'ushahidi.plans',
-        'ushahidi.sets',
-        'ushahidi.activity',
-        'ushahidi.user-profile'
+        'ushahidi.main',
+        'ushahidi.settings'
     ])
 
     .constant('CONST', {
@@ -94,7 +86,8 @@ angular.module('app',
         OAUTH_CLIENT_ID     : 'ushahidiui',
         OAUTH_CLIENT_SECRET : '35e7f0bca957836d05ca0492211b0ac707671261',
         CLAIMED_ANONYMOUS_SCOPES : claimedAnonymousScopes,
-        CLAIMED_USER_SCOPES : claimedAnonymousScopes.concat('dataproviders')
+        CLAIMED_USER_SCOPES : claimedAnonymousScopes.concat('dataproviders'),
+        MAPBOX_API_KEY      : window.ushahidi.mapboxApiKey || 'pk.eyJ1IjoidXNoYWhpZGkiLCJhIjoiY2lxaXUzeHBvMDdndmZ0bmVmOWoyMzN6NiJ9.CX56ZmZJv0aUsxvH5huJBw' // Default OSS mapbox api key
     })
 
     .config(['$compileProvider', function ($compileProvider) {

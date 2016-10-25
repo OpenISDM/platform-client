@@ -20,7 +20,8 @@ var gulp         = require('gulp'),
     gzip         = require('gulp-gzip'),
     jscs         = require('gulp-jscs'),
     dotenv       = require('dotenv'),
-    Transifex    = require('transifex');
+    Transifex    = require('transifex'),
+    runSeq       = require('run-sequence');
 
 // Grab env vars from .env file
 dotenv.load({silent: true});
@@ -136,8 +137,8 @@ gulp.task('sass', ['rename'], function () {
  */
 gulp.task('css', [], function () {
     return gulp.src([
-            options.compressedCSS ? 'node_modules/platform-pattern-library/assets/css/*.min.css' : 'node_modules/platform-pattern-library/assets/css/*.css',
-            'node_modules/platform-pattern-library/assets/css/*.css.map'
+            options.compressedCSS ? 'node_modules/ushahidi-platform-pattern-library/assets/css/*.min.css' : 'node_modules/ushahidi-platform-pattern-library/assets/css/*.css',
+            'node_modules/ushahidi-platform-pattern-library/assets/css/*.css.map'
             ])
         .pipe(rename(function (path) {
             // If using compressedCSS, string the .min from filenames
@@ -153,7 +154,7 @@ gulp.task('css', [], function () {
  * Move Iconic Sprite from pattern library into server/www/img
  */
 gulp.task('svg-iconic-sprite', [], function () {
-    return gulp.src(['node_modules/platform-pattern-library/assets/img/iconic-sprite.svg'])
+    return gulp.src(['node_modules/ushahidi-platform-pattern-library/assets/img/iconic-sprite.svg'])
         .pipe(gulp.dest(options.www + '/img'));
 });
 
@@ -162,7 +163,7 @@ gulp.task('svg-iconic-sprite', [], function () {
  * Move svg icons from pattern library into server/www/img
  */
 gulp.task('svg-icons', [], function () {
-    return gulp.src(['node_modules/platform-pattern-library/assets/img/icons/**/*'])
+    return gulp.src(['node_modules/ushahidi-platform-pattern-library/assets/img/icons/**/*'])
         .pipe(gulp.dest(options.www + '/img/icons'));
 });
 
@@ -184,7 +185,7 @@ gulp.task('rename', [
  * Copies font files to public directory.
  */
 gulp.task('font', function () {
-    return gulp.src(['node_modules/platform-pattern-library/assets/fonts/**'])
+    return gulp.src(['node_modules/ushahidi-platform-pattern-library/assets/fonts/**'])
         .pipe(gulp.dest(options.www + '/fonts'))
         .pipe(livereload())
         ;
@@ -255,7 +256,7 @@ function bundleBrowserify(stream) {
  * Task: `build`
  * Builds sass, fonts and js
  */
-gulp.task('build', ['sass', 'css', 'font', 'svg-iconic-sprite', 'svg-icons', 'browserify']);
+gulp.task('build', ['sass', 'css', 'font', 'svg-iconic-sprite', 'svg-icons', 'browserify', 'html']);
 
 /**
  * Task: `watch`
@@ -264,14 +265,15 @@ gulp.task('build', ['sass', 'css', 'font', 'svg-iconic-sprite', 'svg-icons', 'br
 gulp.task('watch', ['watchify'], function () {
     livereload.listen(35732);
     gulp.watch('sass/**/*.scss', ['sass']);
-    gulp.watch('server/www/**/*.html', ['html']);
+    gulp.watch('app/**/*.html', ['html']);
 });
 
 /**
  * Html task just trigger livereload when html changes
  */
 gulp.task('html', [], function () {
-    return gulp.src(['server/www/**/*.html'])
+    return gulp.src(['app/**/*.html'])
+        .pipe(gulp.dest(options.www + '/templates'))
         .pipe(livereload())
         ;
 });
@@ -365,16 +367,17 @@ gulp.task('bump', function () {
  */
 gulp.task('tar', ['build'], function () {
     var version = gutil.env['version-suffix'] || require('./package.json').version;
+    var dest_dir = gutil.env['dest-dir'] || 'build';
 
     return gulp.src('server/www/**')
         .pipe(rename(function (path) {
             // Prefix path
-            path.dirname = 'platform-client/' + path.dirname;
+            path.dirname = 'ushahidi-platform-client-bundle-' + version + '/' + path.dirname;
         }))
-        .pipe(tar('platform-client-' + version + '.tar'))
+        .pipe(tar('ushahidi-platform-client-bundle-' + version + '.tar'))
         .pipe(gzip())
-        .pipe(gulp.dest('build'))
-        .pipe(notify('Created tarball build/<%= file.relative %>'));
+        .pipe(gulp.dest(dest_dir))
+        .pipe(notify('Created tarball dest_dir/<%= file.relative %>'));
 });
 
 /**
@@ -391,7 +394,13 @@ gulp.task('release', ['transifex-download'], function () {
 /**
  * Task `heroku:dev` - builds app for heroku
  */
-gulp.task('heroku:dev', ['build'], function () {});
+gulp.task('heroku:dev', ['build'], function (done) {
+    if (process.env.TX_USERNAME && process.env.TX_PASSWORD) {
+        runSeq('transifex-download', done);
+    } else {
+        done();
+    }
+});
 
 /**
  * Task: `transifex-download`

@@ -5,6 +5,7 @@
         "by" : "by",
         "can_see_this" : "can see this",
         "collections" : "Collections",
+        "create_collection" : "Create collection",
         "create_new" : "Create new",
         "created_by" : "Created by {{author}}",
         "documentation": {
@@ -15,6 +16,7 @@
             "title" : "Report a bug",
             "description" : "Tell us when something doesn't work the way you expected."
         },
+        "edit_collection" : "Edit collection",
         "features" : {
             "title" : "Features",
             "description" : "See what Ushahidi can do and how it works."
@@ -31,8 +33,10 @@
         "saving" : "Saving",
         "settings": "Settings",
         "share": "Share",
+        "specific_roles" : "Specific roles...",
         "general" : "General",
         "surveys" : "Surveys",
+        "add_survey" : "Add Survey",
         "edit_survey" : "Edit Survey",
         "data_sources" : "Data Sources",
         "import" : "Import",
@@ -61,7 +65,11 @@
         "key" : "Key",
         "default_value" : "Default value",
         "fields" : "Fields",
-        "return_to_all_posts" : "Return to all posts"
+        "tasks" : "Tasks",
+        "return_to_all_posts" : "Return to all posts",
+        "this_deplyment_is_private" : "This deployment is private",
+        "private_deployment" : "Private Deployment",
+        "mark_as" : "Mark as"
     },
     "toolbar": {
         "searchbar" : {
@@ -155,10 +163,15 @@
         "title" : "Title",
         "field_allowed_relation_survey": "Allowed surveys",
         "description" : "Description",
+        "task_description" : "Task description",
+        "post_fields" : "Post fields",
+        "task_fields" : "Task fields",
+        "show_task" : "Show this task to everyone when the post is published",
+        "task_info" : "You can add additional information to each post, like translations or verification, and assign them to people by adding <strong>Tasks</strong>. You can choose from pre-built tasks or create your own from scratch.",
         "text_desc" : "A sentence or less",
         "textarea_desc" : "Multiple sentences or paragraphs<",
         "decimal_desc" : "A number with decimal places",
-        "integer_desc" : "A while number",
+        "integer_desc" : "A whole number",
         "location_desc" : "A geographic location chosen via a map",
         "date_desc" : "A date with year, month, day",
         "datetime_desc" : "A date with time in hours and minutes",
@@ -174,7 +187,10 @@
         "task_name" : "Task name",
         "require_field" : "Require this field be completed",
         "name_this_task" : "Name this task...",
+        "require_review" : "Require posts be reviewed before they're published",
         "require_task" : "Require this task be completed before a post can be visible to the public",
+        "survey_permissions": "Survey permissions",
+        "who_can_add": "Who can add to this survey",
         "delete" : {
             "desc" : "<strong>If you delete this survey</strong>, all of its posts will also be deleted. Proceed with caution.",
             "delete" : "Delete survey",
@@ -263,7 +279,8 @@
         "save_to_set" : "Save to Set",
         "search" : "Search",
         "date_range" : "Date range",
-        "who_its_visible_to": "Who it's visible to"
+        "who_its_visible_to": "Who it's visible to",
+        "status" : "Status"
     },
     "graph" : {
         "all_posts": "Nothing; Show all posts",
@@ -342,8 +359,6 @@
         "map_settings" : "Map Settings",
         "more" : "More",
         "notifications" : "Notifications",
-        "new_collection" : "New Collection",
-        "notifications" : "Notifications",
         "only_author" : "Only the author",
         "only_you" : "Only you",
         "people" : "People",
@@ -387,6 +402,7 @@
         "there_are_no_posts" : "There are no posts",
         "in_this_deployment" : " in this deployment, yet.",
         "by" : "by",
+        "task_completed" : "Task completed",
         "everyone" : "Everyone",
         "just_you" : "Just you",
         "specific_roles" : "Specific roles...",
@@ -405,7 +421,8 @@
         "create" : "Create",
         "change" : "Change",
         "posted_by" : "Posted by",
-        "draft" : "Draft",
+        "draft" : "Under review",
+        "archived" : "Archived",
         "edited_by" : "Edited by",
         "export" : "Export",
         "select_all" : "Select All",
@@ -451,10 +468,22 @@
         "post_actions" : {
             "edit" : "Edit",
             "delete" : "Delete",
-            "export" : "Export"
+            "export" : "Export",
+            "put_under_review" : "Put under review",
+            "archive" : "Archive",
+            "publish" : "Publish"
         },
+        "created_at" : "<strong>Created</strong> at",
+        "updated_at" : "<strong>Last updated</strong> at",
+        "author" : "Author",
+        "post_date" : "Post date",
+        "change_author" : "Change author",
+        "status_published" : "This post is published",
+        "status_review" : "This post is under review",
+        "status_archived" : "This post is archived",
         "modify" : {
             "intro" : "Select survey:",
+            "no_task_values": "There are currently no saved values for this task.",
             "create_type" : "Create {{type}}",
             "edit_type" : "Edit {{type}}: {{title}}",
             "add_a_post" : "Add a post",
@@ -510,6 +539,8 @@
             "associated_messages": "View messages associated with this post"
         },
         "valid" : {
+            "invalid_state" : "This post is currently in an invalid state. You'll need to complete all required tasks before you can re-publish this post. You can either complete the necessary tasks or give your post a different status, like \"under review.\"",
+            "validation_fail" : "Required fields are missing, these fields are marked with an * below.",
             "title" : {
                 "required" : "A title is required",
                 "minlength" : "Title is too short",
@@ -730,8 +761,23 @@
         }
     },
     "data_import" :{
+        "survey_field" : "Survey field",
+        "csv_column" : "CSV column",
+        "choose_which_column" : "Choose which CSV column should be assigned to each survey field",
+        "each_survey_field" : "Each of the survey's fields are listed below. Choose the column from your CSV file that you'd like to use to populate each of those fields.",
+        "status_explanation" : "Ushahidi recognizes one of three post statuses: Published, Under review, and Archived. So be sure that each entry in the column you select has one of those three values.",
+        "defined_column" : "Defined by a column in your CSV file...",
+        "imported_posts_status" : "Imported posts should have their status...",
+        "marked_as" : "Marked as...",
+        "see_imported_posts" : "See imported posts",
+        "import_another_csv" : "Import another CSV file",
+        "import_complete" : "Your import is complete",
+        "complete_info" : "The data from your CSV spreadsheet, <em>{{filename}}</em>, was successfully imported into your <a href=\"/settings/survey/{{form_id}}\">{{form_name}}</a> survey.",
+        "import_another" : "Import another CSV file",
+        "nearly_complete" : "Your import is nearly complete",
+        "finish_info" : "The data from your CSV spreadsheet is still being processed. You're welcome to leave this page or wait until the process is complete. Either way, we'll notify you when your data is ready.",
         "next" : "Next",
-        "configure_posts": "Configure Posts",
+        "configure_imported_posts": "Configure imported posts",
         "configure_explanation": "Through this interface you can set values for the survey fields that were not mapped to entries in the CSV. These values will be the same for all imported posts.",
         "import" : "Import",
         "import_explanation_csv" : "Import the data from a CSV spreadsheet into your deployment as posts belonging to a specific survey",
@@ -741,10 +787,10 @@
         "configure_posts" : "Configure Posts",
         "configure_all_imported_posts" : "Configure all imported posts",
         "csv" : "CSV",
-        "post_type" : "Import to which survey?",
         "file_csv" : "CSV file",
         "import_csv" : "Import CSV",
-        "choose_file" : "Choose file",
+        "import_to" : "Import to ",
+        "choose_csv_file" : "Choose CSV file",
         "organize_data" : "Organize data",
         "organize_your_imported_data" : "Assign CSV columns to post fields",
         "assign_csv_message" : "Assign CSV columns to post fields",
@@ -752,10 +798,10 @@
         "csv_instructions_required_fields" : "Fields marked with a [*] are required and must be assigned a value.",
         "csv_column_name" : "CSV column name",
         "post_type_title" : "{{form_name}} field name",
-        "dont_import" : "Don't import",
+        "leave_empty" : "Leave empty",
         "cancel_import" : "Cancel import",
         "finish_import" : "Finish import",
-        "select_post_type" : "Select Survey"
+        "which_survey" : "which survey?"
     },
     "user": {
         "add_user" : "Add User",
@@ -847,9 +893,13 @@
             "bulk_destroy_cancelled" : "Delete cancelled"
         },
         "data_import" : {
+            "see_imported_posts" : "See imported posts",
+            "file_missing" : "Please choose a CSV file to upload.",
+            "form_missing" : "Please select a Survey.",
             "csv_upload" : "File {{name}} successfully uploaded",
-            "csv_mappings_set" : "CSV imported. {{processed}} records imported, {{errors}} records failed.",
-            "duplicate_fields" : "Columns must be mapped to unique survey fields. The following fields have more than 1 mapping: {{duplicates}}",
+            "csv_import_processed_errors" : "<strong>Your CSV import</strong> is complete. {{processed}} records imported, {{errors}} records failed.",
+            "csv_import_success_info" : "The data from your CSV spreadsheet, <em>{{filename}}</em>, was successfully imported into your <a href=\"/views/list\">{{form_name}}</a> survey.",
+            "duplicate_fields" : "Columns must be mapped to unique survey fields. The following columns have more than 1 mapping: {{duplicates}}",
             "required_fields" : "Required fields must be set to a value. The following fields have not been set: {{required}}",
             "no_mappings" : "No fields have been assigned mappings - at least one field must be mapped to continue",
             "csv_import_cancel" : "CSV import cancelled"
@@ -892,7 +942,8 @@
             "destroy_error" : "Unable to delete post, please try again",
             "bulk_destroy_confirm" : "Are you sure you want to delete {{count}} posts?",
             "stage_save_success" : "Updated {{stage}}",
-            "export" : "This will export filtered posts. Are you sure you want to continue?"
+            "export" : "This will export filtered posts. Are you sure you want to continue?",
+            "update_status_success_bulk" : "Status updated for {{count}} posts"
         },
         "category" : {
             "save_success" : "Saved category {{name}}",
@@ -972,7 +1023,9 @@
         "get_current_position": "Get current position",
         "update_location": "Update location",
         "click_map": "Click the map to place a marker",
-        "clear":"Clear"
+        "clear":"Clear",
+        "placeholder":"Enter a location..",
+        "error":"Sorry we could not find a location matching your search"
     },
     "notification": {
         "title": "Notifications",
