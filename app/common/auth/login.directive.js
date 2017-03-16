@@ -14,14 +14,18 @@ LoginController.$inject = [
     'Authentication',
     'PasswordReset',
     '$location',
-    'ConfigEndpoint'
+    'ConfigEndpoint', 
+    'ModalService', // add service "ModalService"
+    '$rootScope' // add $rootScope
 ];
 function LoginController(
     $scope,
     Authentication,
     PasswordReset,
     $location,
-    ConfigEndpoint
+    ConfigEndpoint,
+    ModalService, 
+    $rootScope
 ) {
     $scope.email = '';
     $scope.password = '';
@@ -31,6 +35,11 @@ function LoginController(
     $scope.cancel = cancel;
     $scope.forgotPassword = forgotPassword;
     $scope.showCancel = false;
+
+//--------------------------------------------//
+    $rootScope.userEmail = '';
+    $rootScope.userPassword = '';
+//--------------------------------------------//
 
     activate();
 
@@ -60,7 +69,19 @@ function LoginController(
     function finishedLogin() {
         $scope.failed = false;
         $scope.processing = false;
+
+//---------------------------------------------------------//
+        //save "email" and "password"
+        $rootScope.userEmail = $scope.email; 
+        $rootScope.userPassword = $scope.password; 
+//---------------------------------------------------------//
+
         $scope.$parent.closeModal();
+    }
+    
+    // open user profile
+    function openProfile() {
+        ModalService.openTemplate('<account-settings></account-settings>', '', false, false, true, true);
     }
 
     function loginSubmit(email, password) {
@@ -68,7 +89,10 @@ function LoginController(
 
         Authentication
             .login(email, password)
-            .then(finishedLogin, clearLoginForm);
+            .then(finishedLogin, clearLoginForm)
+//--------------------Open User Profile--------------------//
+            .then(openProfile);
+//---------------------------------------------------------//
     }
 
     function forgotPassword() {

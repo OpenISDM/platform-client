@@ -1,0 +1,73 @@
+<div>
+    <layout-class layout="a"></layout-class>
+    <div class="mode-context init" ng-controller="navigation as nav" dropdown>
+        <header class="mode-context-header" ng-class="{ 'has-logo' : nav.site.image_header }">
+            <h1 class="mode-context-title"><a href="/" ng-bind="nav.site.name"></a></h1>
+            <img ng-if="nav.site.image_header" ng-src="{{ nav.site.image_header }}" class="deployment-logo" />
+        </header>
+
+        <span class="mode-context-trigger" dropdown-toggle>
+            <svg class="iconic">
+                <use xlink:href="/img/iconic-sprite.svg#chevron-bottom"></use>
+            </svg>
+            <span class="label hidden" translate>app.show_more_less</span>
+        </span>
+
+        <div class="mode-context-body">
+            <p markdown-to-html="nav.site.description"></p>
+        </div>
+    </div>
+    <main role="main">
+        <div class="main-col">
+            <div class="listing card init">
+               <div class="listing-item">
+                   <div class="listing-item-primary">
+                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-click="guestshow=!guestshow">訪客操作流程</a></h2>
+                       <p class="listing-item-secondary" style="font-size:15px;">
+                       災害發生時，為了能夠讓我們和您聯絡，我們鼓勵您<a href="http://openisdm.github.io/volunteer/#/register-privacy" target="_blank" style="color:blue;">加入成為志工</a>
+                       </p> 
+                       <div ng-show="guestshow">
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">1. 點選 "黃色圓圈加號"</p>
+                       <img src="/introimg/AddPost.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">2. 選擇日期正確的項目來回報</p>
+                       <img src="/introimg/SelectSurvey.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">3. 完成表單填寫並點選 "發佈"</p>
+                       <img src="/introimg/EditPost.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">※ 我們鼓勵您點選 "註冊" 成為志工，手機介面能夠在 "更多" 中找到</p>
+                       <img src="/introimg/GuestSignIn.png"/>
+                       <p></p>
+                       </div>
+                   </div>
+               </div>
+               <div class="listing-item">
+                   <div class="listing-item-primary">
+                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-click="vmsshow=!vmsshow">志工操作流程</a></h2>
+                       <div ng-show="vmsshow">
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">1. 點選 "登入"，帳號為註冊時填寫的Email</p>
+                       <img src="/introimg/UserLogin.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">2. 登入後，確認或修改您的顯示名稱並 "儲存"</p>
+                       <img src="/introimg/SetDisplayName.png"/>
+		       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">3. 點選 "黃色圓圈加號"</p>
+                       <img src="/introimg/AddPost.png"/>
+                       <p></p> 
+                       <p class="listing-item-secondary" style="font-size:15px;">4. 選擇標有[志工專用]且日期正確的項目來回報</p>
+                       <img src="/introimg/SelectSurveyVMS.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">5. 完成表單填寫並點選 "發佈"</p>
+                       <img src="/introimg/EditPostVMS.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">6. 另外，若您已成為志工，您將會在事件發生時收到Email通知信</p>
+                       </div>
+                   </div>
+               </div>
+            </div>
+        </div>
+    </main>
+</div>

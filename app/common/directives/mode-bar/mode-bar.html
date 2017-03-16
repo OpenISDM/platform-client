@@ -12,7 +12,8 @@
                     <translate>views.map</translate>
                 </a>
             </li>
-
+            
+            <!--
             <li ng-class="{ active: activeMode === 'list' }">
                 <a ng-href="{{baseUrl + 'list' }}" class="view-list">
                     <svg class="iconic">
@@ -21,13 +22,42 @@
                     <translate>views.list</translate>
                 </a>
             </li>
-
+            -->
+	    
+	    <!-- Hide "Activity" Button
             <li ng-if="isActivityAvailable || hasManageSettingsPermission()" ng-class="{ active: activeMode === 'activity' }" data-message="customize">
                 <a href="/activity">
                     <svg class="iconic">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/img/iconic-sprite.svg#pulse"></use>
                     </svg>
                     <translate>views.activity</translate>
+                </a>
+            </li>
+            -->
+                        
+            <li ng-show="currentUser">
+                <a ng-click="viewAccountSettings()">
+                    <img class="avatar" ng-src="https://www.gravatar.com/avatar/{{ currentUser.gravatar || '00000000000000000000000000000000' }}?d=retro" alt="{{ currentUser.realname }}" style="width: 15.5px; height: 15.5px"/>
+                    <span class="label">{{currentUser.realname}}</span>
+                </a>
+            </li>
+            
+            <li ng-hide="currentUser">
+                <a ng-click="login()" data-modal="login">
+                    <svg class="iconic">
+                        <use xlink:href="/img/iconic-sprite.svg#account-login"></use>
+                    </svg>
+                    <translate translate="nav.login">Log in</translate>
+                </a>
+            </li>
+
+	        <!-- Introduction Button -->
+            <li ng-class="{ active: activeMode === 'intro' }">
+                <a ng-href="/intro" class="view-list">
+                    <svg class="iconic">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/img/iconic-sprite.svg#book"></use>
+                    </svg>
+                    <translate>views.intro</translate>
                 </a>
             </li>
 
@@ -39,6 +69,34 @@
                     <translate>nav.more</translate>
                 </a>
                 <ul>
+                    <li ng-class="{ active: activeMode === 'list' }">
+                	<a ng-href="{{baseUrl + 'list' }}" class="view-list">
+                    	    <svg class="iconic">
+                                <use xlink:href="/img/iconic-sprite.svg#list-rich"></use>
+                    	    </svg>
+                    	    <translate>views.list</translate>
+                	</a>
+            	    </li>
+                    
+                    <!-- VMS Registration Button -->
+                    <li ng-show="!currentUser && canRegister">
+                	<a ng-href="http://openisdm.github.io/volunteer/#/register-privacy" target="_blank">
+                    	    <svg class="iconic">
+                            	<use xlink:href="/img/iconic-sprite.svg#person"></use>
+                            </svg>
+                    	    <translate translate="nav.register">Sign up</translate>
+                	</a>
+            	    </li>
+
+                    <li ng-show="currentUser">
+                	<a ng-click="logout()" data-modal="login">
+                            <svg class="iconic">
+                        	<use xlink:href="/img/iconic-sprite.svg#account-logout"></use>
+                    	    </svg>
+                            <span class="label" translate="nav.logout">Log out</span>
+                	</a>
+            	    </li>
+
                     <li data-message="customize" ng-show="hasManageSettingsPermission()" ng-class="{ active: activeMode === 'settings' }">
                         <a href="/settings">
                             <svg class="iconic">
@@ -47,6 +105,16 @@
                             <translate>nav.settings</translate>
                         </a>
                     </li>
+
+                    <li ng-show="hasManageSettingsPermission()" ng-class="{ active: activeMode === 'manage' }">
+                        <a ng-href="/manage" class="view-list">
+                            <svg class="iconic">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/img/iconic-sprite.svg#monitor"></use>
+                            </svg>
+                            <translate>views.manage</translate>
+                        </a>
+                    </li>
+
                 </ul>
             </li>
         </ul>
@@ -62,6 +130,7 @@
                 </a>
             </li>
 
+            <!-- Move "Logout" button outside
             <li ng-show="currentUser">
                 <a ng-click="logout()" data-modal="login">
                     <svg class="iconic">
@@ -70,14 +139,18 @@
                     <span class="label" translate="nav.logout">Log out</span>
                 </a>
             </li>
-
+            -->
+            
+            <!-- Move "Account" button outside
             <li ng-show="currentUser">
                 <a ng-click="viewAccountSettings()">
                     <img class="avatar" ng-src="https://www.gravatar.com/avatar/{{ currentUser.gravatar || '00000000000000000000000000000000' }}?d=retro" alt="{{ currentUser.realname }}"/>
                     <span class="label">{{currentUser.realname || currentUser.email}}</span>
                 </a>
             </li>
-
+            -->
+            
+            <!-- Hide original "Signup" button
             <li ng-show="!currentUser && canRegister">
                 <a ng-click="register()" data-modal="signup">
                     <svg class="iconic">
@@ -86,7 +159,9 @@
                     <translate translate="nav.register">Sign up</translate>
                 </a>
             </li>
-
+            --> 
+                        
+            <!-- Move "Login" Button outside
             <li ng-hide="currentUser">
                 <a ng-click="login()" data-modal="login">
                     <svg class="iconic">
@@ -95,7 +170,9 @@
                     <translate translate="nav.login">Log in</translate>
                 </a>
             </li>
+            -->
 
+	    <!-- Hide "Collection" button
             <li>
                 <a ng-click="viewCollectionListing()">
                     <svg class="iconic">
@@ -104,6 +181,7 @@
                     <span class="label" translate>nav.collections</span>
                 </a>
             </li>
+            -->
 
             <li ng-if="todo">
                 <a>

@@ -50,7 +50,8 @@ let paths = {
 
 // use webpack.config.js to build modules
 gulp.task('dist', (done) => {
-    runSeq('clean', ['dist:webpack', 'dist:config', 'transifex-download'], done);
+    //runSeq('clean', ['dist:webpack', 'dist:config', 'transifex-download'], done);
+    runSeq('clean', ['dist:webpack', 'dist:config'], done);
 });
 
 // Copy config.js into dist

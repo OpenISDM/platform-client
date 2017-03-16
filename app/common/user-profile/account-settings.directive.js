@@ -18,15 +18,24 @@ function (
 
             scope.general = true;
             scope.notifications = false;
+            scope.vmsprofile = false;
 
             scope.showGeneral = function () {
                 scope.general = true;
                 scope.notifications = false;
+                scope.vmsprofile = false;
             };
 
             scope.showNotifications = function () {
                 scope.general = false;
                 scope.notifications = true;
+                scope.vmsprofile = false;
+            };
+
+            scope.showVMSProfile = function () {
+                scope.general = false;
+                scope.notifications = false;
+                scope.vmsprofile = true;
             };
 
             scope.$on('event:close', function () {

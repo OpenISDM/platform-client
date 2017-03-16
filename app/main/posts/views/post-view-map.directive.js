@@ -21,7 +21,7 @@ function PostViewMap(PostEndpoint, Maps, _, PostFilters, L, $q, $rootScope, $com
         function activate() {
             // Start loading data
             var posts = loadPosts();
-            var createMap = Maps.createMap(element[0].querySelector('#map'))
+            var createMap = Maps.createMapIndex(element[0].querySelector('#map'))
             .then(function (data) {
                 map = data;
             });
@@ -43,7 +43,7 @@ function PostViewMap(PostEndpoint, Maps, _, PostFilters, L, $q, $rootScope, $com
                 if (map) {
                     map.remove();
                 }
-            });
+            });          
         }
 
         function addPostsToMap(posts) {

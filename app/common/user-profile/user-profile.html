@@ -24,7 +24,7 @@
                 for="email" translate>user.email</label>
             <input id="email" name="email" type="email"
                 ng-class="{ 'error': form.email.$invalid && form.email.$dirty }"
-                ng-disabled="state.processing"
+                ng-disabled="!state.processing"
                 placeholder="{{ 'user_create.email'|translate }}"
                 ng-maxlength="150"
                 ng-model="user.email"
@@ -33,9 +33,9 @@
                 ng-show="form.email.$dirty"
                 class="alert error"
                translate="{{'user.valid.email.' + error}}"></p>
-            </div>
+          </div>
 
-            <p ng-hide="state.changingPassword"><a href class="cta change-password" ng-click="state.changingPassword = !state.changePachangingPasswordssword" translate>user_profile.update_password</a></p>
+            <!--<p ng-hide="state.changingPassword"><a href class="cta change-password" ng-click="state.changingPassword = !state.changePachangingPasswordssword" translate>user_profile.update_password</a></p>
 
             <div ng-if="state.changingPassword">
                 <label class="input-label"
@@ -52,7 +52,7 @@
                     ng-show="form.password.$dirty"
                     class="alert error"
                     translate="{{'user.valid.password.' + error}}"></p>
-            </div>
+            </div>-->
 
             <div class="modal-actions">
                 <div class="form-field">

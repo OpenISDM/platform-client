@@ -39,7 +39,8 @@ function Maps(ConfigEndpoint, L, _, CONST) {
         pointToLayer: pointToLayer,
         getConfig: getConfig,
         getLayer: getLayer,
-        pointIcon: pointIcon
+        pointIcon: pointIcon, 
+        createMapIndex: createMapIndex
     };
 
     function createMap(element) {
@@ -57,7 +58,53 @@ function Maps(ConfigEndpoint, L, _, CONST) {
 
             // Add a layer control
             // L.control.layers(getBaseLayersForControl(), {}).addTo(map);
+            
+            return map;
+        });
+    }
 
+    function createMapIndex(element) {
+        return getLeafletConfig().then(function (config) {
+            var map = L.map(element, config);
+
+            map.attributionControl.setPrefix(false);
+            map.zoomControl.setPosition('bottomleft');
+            map.setMaxBounds([[-90,-360],[90,360]]);
+            map.on('popupopen', function (e) {
+                var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
+                px.y -= e.popup._container.clientHeight / 2; // find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+                map.panTo(map.unproject(px), {animate: true}); // pan to new center
+            });
+
+            // Add a layer control
+            // L.control.layers(getBaseLayersForControl(), {}).addTo(map);
+
+//---------------Add User Location Button---------------//
+            var userlocate = L.control.locate({
+                strings: {
+                    title: 'Show me where I am.'
+                },
+            position: 'bottomleft',
+                //keepCurrentZoomLevel: true,
+                circleStyle: {
+                    color: '#FF0000',
+                    fillColor: '#FF0000'
+                },
+                markerStyle: {
+                    color: '#FF0000',
+                    fillColor: '#FF0000'
+                },
+                locateOptions: {
+                    maxZoom: 15
+                },
+            }).addTo(map);
+            //userlocate.start();
+            //userlocate.stop();
+            userlocate = L.control.locate({
+                keepCurrentZoomLevel: false, //keep the same zoom level
+                showPopup: true
+            });
+//-------------------------------------------------------//
             return map;
         });
     }
@@ -112,7 +159,8 @@ function Maps(ConfigEndpoint, L, _, CONST) {
 
     function defaultConfig() {
         return {
-            scrollWheelZoom: false,
+            // scrollWheelZoom: false,
+            scrollWheelZoom: true,
             center: [-1.2833, 36.8167], // Default to centered on Nairobi
             zoom: 8,
             layers: [L.tileLayer(layers.baselayers.streets.url, layers.baselayers.streets.layerOptions)]

@@ -10,16 +10,25 @@
           user_profile.nav.general
         </a>
       </li>
-      <li ng-class="{'active': notifications}">
+
+      <!-- vms profile -->
+      <li ng-class="{'active': vmsprofile}">
+        <a ng-click="showVMSProfile()" translate>
+          user_profile.nav.vmsprofile
+        </a>
+      </li>
+
+      <!--<li ng-class="{'active': notifications}">
         <a ng-click="showNotifications()" translate>
           user_profile.nav.notifications
         </a>
-      </li>
+      </li>-->
     </ul>
   </nav>
 
   <div class="modal-body">
     <user-profile ng-show="general"></user-profile>
     <notifications ng-show="notifications"></notifications>
+    <vms-profile ng-show="vmsprofile"></vms-profile>
   </div>
 </div>

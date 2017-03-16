@@ -404,7 +404,9 @@
     "views" : {
         "map" : "Map",
         "list" : "Timeline",
-        "activity" : "Activity"
+        "activity" : "Activity", 
+        "intro" : "Introduction", 
+        "manage" : "Management"
     },
     "post": {
         "add_to_form" : "Add to {{form}}",
@@ -886,7 +888,16 @@
         },
         "nav" : {
             "general": "General",
-            "notifications" : "Notifications"
+            "notifications" : "Notifications", 
+            "vmsprofile" : "Volunteer Information"
+        }, 
+        "subtitle" : {
+            "phone" : "Phone Number", 
+            "location" : "Current Location", 
+            "equipment" : "Equipments", 
+            "skill" : "Skills", 
+            "city" : "Current City",
+            "email": "Email"
         }
     },
     "user_create" :  {

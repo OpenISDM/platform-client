@@ -1,0 +1,46 @@
+<div>
+        <!--<p class="alert confirmation" ng-show="state.success" translate>user_profile.update_success</p>-->
+        <form name="form">
+
+            <!-- VMS Profile -->
+            <div class="form-field">
+              <label class="input-label" translate> user_profile.subtitle.phone </label>
+              <input ng-model="vmsuser.data.phone_number">
+            </div>
+            <div class="form-field">
+              <label class="input-label" translate> user_profile.subtitle.email </label>
+              <input ng-model="vmsuser.data.email">
+            </div>
+            <div class="form-field">
+              <label class="input-label" translate> user_profile.subtitle.city </label>
+              <input ng-model="vmsuser.data.city.name_en">
+            </div>
+            <div class="form-field">
+              <label class="input-label" translate> user_profile.subtitle.location </label>
+              <input ng-model="vmsuser.data.location">
+            </div>
+            <div class="form-field">
+              <label class="input-label" translate> user_profile.subtitle.equipment </label>
+              <input ng-model="vmsuser.data.equipment[0].name">
+            </div>
+            <div class="form-field">
+              <label class="input-label" translate> user_profile.subtitle.skill </label>
+              <input ng-model="vmsuser.data.skills[0].name">
+            </div>
+
+            <!--<div class="modal-actions">
+                <div class="form-field">
+                  <button type="button" class="button-link" ng-click="cancel()" translate>
+                    user_profile.button.cancel
+                  </button>
+
+                  <button type="submit" class="button button-alpha"
+                          ng-click="saveUser(user)" ng-disabled="form.$invalid || state.processing">
+                    <div class="loading" ng-show="saving"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+                    <span translate>user_profile.button.save</span>
+                  </button>
+
+                </div>
+            </div>-->
+        </form>
+</div>

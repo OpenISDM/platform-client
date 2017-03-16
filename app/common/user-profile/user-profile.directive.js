@@ -3,11 +3,15 @@ module.exports = [
     'Notify',
     '_',
     '$translate',
+    '$rootScope', // add $rootScope
+    '$http', // add $http
     function (
         UserEndpoint,
         Notify,
         _,
-        $translate
+        $translate, 
+        $rootScope, 
+        $http
     ) {
         return {
             restrict: 'E',
@@ -36,7 +40,7 @@ module.exports = [
                     var update = UserEndpoint.update({ id: 'me' }, userPayload);
 
                     update.$promise.then(function (user) {
-                        Notify.notify('user_profile.update_success');
+                        Notify.notify('user_profile.update_success_ies');
 
                         $scope.state.success = true;
                         $scope.state.processing = false;
@@ -59,6 +63,7 @@ module.exports = [
                 };
 
                 $scope.user = UserEndpoint.getFresh({id: 'me'});
+
             }
         };
     }];
