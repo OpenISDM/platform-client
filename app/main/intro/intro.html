@@ -22,7 +22,7 @@
             <div class="listing card init">
                <div class="listing-item">
                    <div class="listing-item-primary">
-                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-click="guestshow=!guestshow">訪客操作流程</a></h2>
+                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-style="guestcolor" ng-click="expandguest()">訪客操作流程</a></h2>
                        <p class="listing-item-secondary" style="font-size:15px;">
                        災害發生時，為了能夠讓我們和您聯絡，我們鼓勵您<a href="http://openisdm.github.io/volunteer/#/register-privacy" target="_blank" style="color:blue;">加入成為志工</a>
                        </p> 
@@ -45,7 +45,7 @@
                </div>
                <div class="listing-item">
                    <div class="listing-item-primary">
-                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-click="vmsshow=!vmsshow">志工操作流程</a></h2>
+                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-style="vmscolor" ng-click="expandvms()">志工操作流程</a></h2>
                        <div ng-show="vmsshow">
                        <p></p>
                        <p class="listing-item-secondary" style="font-size:15px;">1. 點選 "登入"，帳號為註冊時填寫的Email</p>
@@ -53,7 +53,7 @@
                        <p></p>
                        <p class="listing-item-secondary" style="font-size:15px;">2. 登入後，確認或修改您的顯示名稱並 "儲存"</p>
                        <img src="/introimg/SetDisplayName.png"/>
-		       <p></p>
+		                   <p></p>
                        <p class="listing-item-secondary" style="font-size:15px;">3. 點選 "黃色圓圈加號"</p>
                        <img src="/introimg/AddPost.png"/>
                        <p></p> 
@@ -67,6 +67,18 @@
                        </div>
                    </div>
                </div>
+               <!--<div class="listing-item">
+                   <div class="listing-item-primary">
+                       <span class="listing-item-title" style="font-size:15px;width:200px;display:inline-block;"> 志工姓名 </span>
+                       <span class="listing-item-title" style="font-size:15px;"> 電子郵件 </span>
+                   </div>
+               </div>
+               <div class="listing-item">
+                   <div class="listing-item-primary">
+                       <span class="listing-item-title" style="font-size:15px;width:200px;display:inline-block;"> liwei </span>
+                       <span class="listing-item-title" style="font-size:15px;"> willis50317@gmail.com </span>
+                   </div>
+               </div>-->
             </div>
         </div>
     </main>

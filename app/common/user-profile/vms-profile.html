@@ -4,28 +4,26 @@
 
             <!-- VMS Profile -->
             <div class="form-field">
-              <label class="input-label" translate> user_profile.subtitle.phone </label>
-              <input ng-model="vmsuser.data.phone_number">
             </div>
             <div class="form-field">
-              <label class="input-label" translate> user_profile.subtitle.email </label>
-              <input ng-model="vmsuser.data.email">
+              <label class="listing-item-title" style="font-size:15px;font-weight: bold;"> 手機 </label>
+              <span class="listing-item-secondary" style="font-size:15px;"> {{vmsuser.data.phone_number}} </span> 
             </div>
             <div class="form-field">
-              <label class="input-label" translate> user_profile.subtitle.city </label>
-              <input ng-model="vmsuser.data.city.name_en">
+              <label class="listing-item-title" style="font-size:15px;font-weight: bold;"> 電子郵件 </label>
+              <span class="listing-item-secondary" style="font-size:15px;"> {{vmsuser.data.email}} </span>
             </div>
             <div class="form-field">
-              <label class="input-label" translate> user_profile.subtitle.location </label>
-              <input ng-model="vmsuser.data.location">
+              <label class="listing-item-title" style="font-size:15px;font-weight: bold;"> 居住城市及地區 </label>
+              <span class="listing-item-secondary" style="font-size:15px;"> {{vmsuser.data.city.name_en}}, {{vmsuser.data.location}} </span>
             </div>
             <div class="form-field">
-              <label class="input-label" translate> user_profile.subtitle.equipment </label>
-              <input ng-model="vmsuser.data.equipment[0].name">
+              <label class="listing-item-title" style="font-size:15px;font-weight: bold;"> 裝備 </label>
+              <span class="listing-item-secondary" style="font-size:15px;margin-right:5px;" ng-repeat="equip in vmsuser.data.equipment"> {{equip.name}} </span>
             </div>
             <div class="form-field">
-              <label class="input-label" translate> user_profile.subtitle.skill </label>
-              <input ng-model="vmsuser.data.skills[0].name">
+              <label class="listing-item-title" style="font-size:15px;font-weight: bold;"> 技能 </label>
+              <span class="listing-item-secondary" style="font-size:15px;margin-right:5px;" ng-repeat="skill in vmsuser.data.skills"> {{skill.name}} </span>
             </div>
 
             <!--<div class="modal-actions">
