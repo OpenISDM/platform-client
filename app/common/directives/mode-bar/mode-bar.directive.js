@@ -30,6 +30,7 @@ function (
             $scope.canRegister = false;
 
             $scope.hasManageSettingsPermission = $rootScope.hasManageSettingsPermission;
+            $scope.hasManagePermission = $rootScope.hasManagePermission;
             $scope.showMore = showMore;
             $scope.viewCollectionListing = CollectionsService.showCollectionList;
             $scope.viewAccountSettings = viewAccountSettings;

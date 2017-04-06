@@ -4,7 +4,7 @@
           <div class="form-field">
             <label class="input-label"
                 ng-class="{ 'error': form.full_name.$invalid && form.full_name.$dirty, 'success': form.full_name.$valid }"
-                for="full_name" translate>user.full_name</label>
+                for="full_name" translate>顯示名稱</label>
             <input id="full_name" name="full_name" type="text"
                 ng-class="{ 'error': form.full_name.$invalid && form.full_name.$dirty }"
                 ng-disabled="state.processing"
@@ -19,6 +19,27 @@
           </div>
 
           <div class="form-field">
+              <label><input type="checkbox" name="checkattend" ng-model="curstate.attend" style="margin-right:10px;">參加志工回報任務</label>
+              <label class="input-label" ng-show="curstate.attend"> 請回報以下資訊, 以便計畫管理者與您聯絡 </label>
+          </div>
+          <div class="form-field" ng-show="curstate.attend">
+              <label class="input-label"> 目前位置 </label>
+              <input ng-model="curstate.location">
+          </div>
+          <div class="form-field" ng-show="curstate.attend">
+              <label class="input-label"> 目前聯絡電話 </label>
+              <input ng-model="curstate.phone">
+          </div>
+          <div class="form-field" ng-show="curstate.attend">
+              <label class="input-label"> 目前聯絡電子郵件 </label>
+              <input ng-model="curstate.email">
+          </div>
+          <div class="form-field" ng-show="curstate.attend">
+              <label class="input-label"> 目前具備的交通工具 </label>
+              <input ng-model="curstate.vehicle">
+          </div>
+
+          <!--<div class="form-field">
             <label class="input-label"
                 ng-class="{ 'error': form.email.$invalid && form.email.$dirty, 'success': form.email.$valid }"
                 for="email" translate>user.email</label>
@@ -33,7 +54,7 @@
                 ng-show="form.email.$dirty"
                 class="alert error"
                translate="{{'user.valid.email.' + error}}"></p>
-          </div>
+          </div>-->
 
             <!--<p ng-hide="state.changingPassword"><a href class="cta change-password" ng-click="state.changingPassword = !state.changePachangingPasswordssword" translate>user_profile.update_password</a></p>
 

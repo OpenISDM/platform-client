@@ -23,8 +23,18 @@ module.exports = [
                     success: false,
                     processing: false,
                     changingPassword: false,
-                    password: ''
+                    password: '' 
                 };
+                
+//---------------------------------------------------------------//
+                $scope.curstate = {
+                    attend: false,
+                    location: '',
+                    email: '',
+                    phone: '',
+                    vehicle: ''
+                };
+//---------------------------------------------------------------//
 
                 $scope.saveUser = function (user) {
                     $scope.state.success = false;

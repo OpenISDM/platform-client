@@ -45,12 +45,12 @@ module.exports = [
                 };
 
                 $http(VMSProfileReq).then(
-                    function(result){
-                        $scope.vmsuser = angular.copy(result.data);
-                        //Notify.notify('!!! Get VMS Profile !!!');
+                    function(response){
+                        $scope.vmsuser = response.data;
+                        //$scope.vmshead = response.headers();
                     }, 
                     function(response){
-                        Notify.notify('!!! Something Wrong !!!');
+                        console.log('!!! Fail to Call API "/auth" (in VMS Profile) !!!');
                     }
                 );
 //----------------------------------------------------------------------------------------------------------------------//

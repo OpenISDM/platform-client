@@ -22,12 +22,14 @@
             <div class="listing card init">
                <div class="listing-item">
                    <div class="listing-item-primary">
-                       
+                       <span class="listing-item-title" style="font-size:15px;font-weight:bold;width:150px;display:inline-block;"> 志工姓名 </span>
+                       <span class="listing-item-title" style="font-size:15px;font-weight:bold;"> 電子郵件 </span>
                    </div>
                </div>
-               <div class="listing-item">
+               <div class="listing-item" ng-repeat="member in vmsmembers">
                    <div class="listing-item-primary">
-                       
+                       <span class="listing-item-secondary" style="font-size:15px;width:150px;display:inline-block;"> {{ member.name }} </span> 
+                       <span class="listing-item-secondary" style="font-size:15px;"> {{ member.email }} </span>
                    </div>
                </div>
             </div>
