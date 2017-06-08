@@ -26,15 +26,47 @@ module.exports = [
                     password: '' 
                 };
                 
-//---------------------------------------------------------------//
-                $scope.curstate = {
-                    attend: false,
-                    location: '',
-                    email: '',
-                    phone: '',
-                    vehicle: ''
+// ---------------------------------- Load User Current State ---------------------------------- // 
+                if (typeof $rootScope.curstate == 'undefined') {
+                    $scope.curstate = {
+                        attend: false,
+                        location: '',
+                        email: '',
+                        phone: '',
+                        vehicle: ''
+                    };
+                } else {
+                    $scope.curstate = $rootScope.curstate;
+                }
+// --------------------------------------------------------------------------------------------- // 
+
+// ---------------------------------- Load VMS Profile ---------------------------------- //
+                var vms_reqBody = {
+                    "email": $rootScope.userEmail.toString(), 
+                    "password": $rootScope.userPassword.toString()
                 };
-//---------------------------------------------------------------//
+
+                var vms_Req = {
+                    method: 'POST', 
+                    url: 'https://vms-dev.herokuapp.com/api/auth', 
+                    headers: {
+                        'Content-Type': 'application/json', 
+                        'X-VMS-API-Key': '581dba93a4dbafa42a682d36b015d8484622f8e3543623bec5a291f67f5ddff1'
+                    }, 
+                    data: JSON.stringify(vms_reqBody)
+                };
+
+                $http(vms_Req).then(
+                    function(response){
+                        console.log('!!! Load VMS Profile !!!');
+                        $scope.vmsstate = response.data;
+                    }, 
+                    function(response){
+                        console.log('!!! Load VMS Profile Fail !!!');
+                    }
+                );
+// -------------------------------------------------------------------------------------- //
+
 
                 $scope.saveUser = function (user) {
                     $scope.state.success = false;
@@ -66,6 +98,275 @@ module.exports = [
                         Notify.apiErrors(errorResponse);
                         $scope.state.processing = false;
                     });
+
+// ------------------------------------------------------ User Location Post ------------------------------------------------------ //
+                    if ($scope.curstate.attend == true && typeof $rootScope.userPostId == 'undefined') { 
+
+                        // ----------------------------------- Create User Location Post ----------------------------------- //
+
+                        $scope.curstate.location = $rootScope.reportLocate;
+                        $rootScope.curstate = $scope.curstate;
+
+                        var reqBody = {
+                            "username": $rootScope.userEmail.toString(),
+                            "password": $rootScope.userPassword.toString(), 
+                            "grant_type": "password",
+                            "client_id": "ushahidiui",
+                            "client_secret": "35e7f0bca957836d05ca0492211b0ac707671261",
+                            "scope": "posts media forms api tags savedsearches sets users stats layers config messages notifications contacts roles permissions csv dataproviders"
+                        };
+                        var Req = {
+                            method: 'POST', 
+                            url: 'http://140.109.22.155:3333/oauth/token', 
+                            headers: {},
+                            data: JSON.stringify(reqBody)
+                        }; 
+
+                        // Get Ushahidi User Access Token
+                        $http(Req).then(
+                            function(response){
+                                $scope.userToken = response.data.token_type.toString() + ' ' + response.data.access_token.toString();
+
+                                var post_reqHead = {
+                                    'Content-Type': 'application/json', 
+                                    'Authorization': $scope.userToken
+                                };
+                                var vmsname = ''; 
+                                vmsname = $scope.vmsstate.data.first_name.toString() + $scope.vmsstate.data.last_name.toString();
+                                var vmsequip = '';
+                                for (var i = $scope.vmsstate.data.equipment.length - 1; i >= 0; i--) {
+                                    vmsequip = vmsequip + ' ' + $scope.vmsstate.data.equipment[i].name.toString();
+                                }
+                                var vmsskill = '';
+                                for (var i = $scope.vmsstate.data.skills.length - 1; i >= 0; i--) {
+                                    vmsskill = vmsskill + ' ' + $scope.vmsstate.data.skills[i].name.toString();
+                                }
+                                var vmsarea = $scope.vmsstate.data.city.name_en.toString() + ' ' + $scope.vmsstate.data.location.toString();
+                                var post_time = new Date();
+                                var post_reqBody = {
+                                    "title":vmsname,
+                                    "content":vmsname+"'s Current Location",
+                                    "locale":"en_US",
+                                    "values":
+                                    {
+                                        "ce7ff9e3-9f37-4f3a-aa29-7cc0ac1b4fa1":[$scope.curstate.phone], // current phone number
+                                        "7be1ac62-de02-49eb-a3fb-facaf8d44802":[$scope.curstate.email], // current email
+                                        "fac18c33-451b-48cc-a085-745f63810868":[$scope.curstate.vehicle], // current vehicles
+                                        "9b56eb4c-3374-4c13-842b-6c33f535eb8f":[$scope.curstate.location], // current location
+                                        "9600661d-ace4-4466-967e-5ffd3ffbe484":[vmsequip], // vms equipments
+                                        "e428c435-0434-4bcb-ba41-9746ccde7cb8":[vmsskill], // vms skills
+                                        "5d2350ff-a3e1-4e9e-939d-5ea9cfc2e98f":[vmsarea] // vms resident area 
+                                    },
+                                    "completed_stages":[],
+                                    "published_to":[],
+                                    "post_date":post_time,
+                                    "form":
+                                    {
+                                        "id":7,
+                                        "url":"http://140.109.22.155:3333/api/v3/forms/7",
+                                        "parent_id":null,
+                                        "name":"Management Map",
+                                        "description":"Show all the members and their current information on map",
+                                        "color":"#E69327",
+                                        "type":"report",
+                                        "disabled":false,
+                                        "created":"2017-04-10T08:18:45+00:00",
+                                        "updated":"2017-04-18T06:15:00+00:00",
+                                        "require_approval":true,
+                                        "everyone_can_create":false,
+                                        "can_create":["admin"],
+                                        "allowed_privileges":["read","create","update","delete","search"]
+                                    },
+                                    "allowed_privileges":["read","create","update","delete","search","change_status"],
+                                    "tags":[]
+                                }; 
+                                var post_Req = {
+                                    method: 'POST', 
+                                    url: 'http://140.109.22.155:3333/api/v3/posts', 
+                                    headers: post_reqHead,
+                                    data: JSON.stringify(post_reqBody)
+                                };
+
+                                // Create Post 
+                                $http(post_Req).then(
+                                    function(response){
+                                        $rootScope.userPostId = response.data.id;
+                                        console.log('!!! Create Post '+$rootScope.userPostId+' !!!');
+                                    }, 
+                                    function(response){
+                                        console.log('!!! Create Post Fail !!!');
+                                    }
+                                );
+                            }, 
+                            function(response){
+                                console.log('!!! Get Ushahidi User Access Token Fail !!!');
+                            }
+                        );
+
+                        // ------------------------------------------------------------------------------------------------- //           
+
+                    } else if ($scope.curstate.attend == true && typeof $rootScope.userPostId !== 'undefined') { 
+
+                        // ----------------------------------- Update User Location Post ----------------------------------- //
+
+                        $scope.curstate.location = $rootScope.reportLocate;
+                        $rootScope.curstate = $scope.curstate; 
+
+                        var reqBody = {
+                            "username": $rootScope.userEmail.toString(),
+                            "password": $rootScope.userPassword.toString(), 
+                            "grant_type": "password",
+                            "client_id": "ushahidiui",
+                            "client_secret": "35e7f0bca957836d05ca0492211b0ac707671261",
+                            "scope": "posts media forms api tags savedsearches sets users stats layers config messages notifications contacts roles permissions csv dataproviders"
+                        };
+                        var Req = {
+                            method: 'POST', 
+                            url: 'http://140.109.22.155:3333/oauth/token', 
+                            headers: {},
+                            data: JSON.stringify(reqBody)
+                        }; 
+
+                        // Get Ushahidi User Access Token
+                        $http(Req).then(
+                            function(response){
+                                $scope.userToken = response.data.token_type.toString() + ' ' + response.data.access_token.toString();
+
+                                var post_reqHead = {
+                                    'Content-Type': 'application/json', 
+                                    'Authorization': $scope.userToken
+                                };
+                                var vmsname = ''; 
+                                vmsname = $scope.vmsstate.data.first_name.toString() + $scope.vmsstate.data.last_name.toString();
+                                var vmsequip = '';
+                                for (var i = $scope.vmsstate.data.equipment.length - 1; i >= 0; i--) {
+                                    vmsequip = vmsequip + ' ' + $scope.vmsstate.data.equipment[i].name.toString();
+                                }
+                                var vmsskill = '';
+                                for (var i = $scope.vmsstate.data.skills.length - 1; i >= 0; i--) {
+                                    vmsskill = vmsskill + ' ' + $scope.vmsstate.data.skills[i].name.toString();
+                                }
+                                var vmsarea = $scope.vmsstate.data.city.name_en.toString() + ' ' + $scope.vmsstate.data.location.toString();
+                                var post_time = new Date();
+                                var post_reqBody = {
+                                    "id":$rootScope.userPostId,
+                                    "title":vmsname,
+                                    "content":vmsname+"'s Current Location",
+                                    "locale":"en_US",
+                                    "values":
+                                    {
+                                        "ce7ff9e3-9f37-4f3a-aa29-7cc0ac1b4fa1":[$scope.curstate.phone], // current phone number
+                                        "7be1ac62-de02-49eb-a3fb-facaf8d44802":[$scope.curstate.email], // current email
+                                        "fac18c33-451b-48cc-a085-745f63810868":[$scope.curstate.vehicle], // current vehicles
+                                        "9b56eb4c-3374-4c13-842b-6c33f535eb8f":[$scope.curstate.location], // current location
+                                        "9600661d-ace4-4466-967e-5ffd3ffbe484":[vmsequip], // vms equipments
+                                        "e428c435-0434-4bcb-ba41-9746ccde7cb8":[vmsskill], // vms skills
+                                        "5d2350ff-a3e1-4e9e-939d-5ea9cfc2e98f":[vmsarea] // vms resident area 
+                                    },
+                                    "completed_stages":[],
+                                    "published_to":[],
+                                    "post_date":post_time,
+                                    "form":
+                                    {
+                                        "id":7,
+                                        "url":"http://140.109.22.155:3333/api/v3/forms/7",
+                                        "parent_id":null,
+                                        "name":"Management Map",
+                                        "description":"Show all the members and their current information on map",
+                                        "color":"#E69327",
+                                        "type":"report",
+                                        "disabled":false,
+                                        "created":"2017-04-10T08:18:45+00:00",
+                                        "updated":"2017-04-18T06:15:00+00:00",
+                                        "require_approval":true,
+                                        "everyone_can_create":false,
+                                        "can_create":["admin"],
+                                        "allowed_privileges":["read","create","update","delete","search"]
+                                    },
+                                    "allowed_privileges":["read","create","update","delete","search","change_status"],
+                                    "tags":[]
+                                }; 
+                                var post_Req = {
+                                    method: 'PUT', 
+                                    url: 'http://140.109.22.155:3333/api/v3/posts/'+$rootScope.userPostId.toString(), 
+                                    headers: post_reqHead,
+                                    data: JSON.stringify(post_reqBody)
+                                };
+
+                                // Update Post 
+                                $http(post_Req).then(
+                                    function(response){
+                                        $rootScope.userPostId = response.data.id;
+                                        console.log('!!! Update Post '+$rootScope.userPostId+' !!!');
+                                    }, 
+                                    function(response){
+                                        console.log('!!! Update Post Fail !!!');
+                                    }
+                                );
+                            }, 
+                            function(response){
+                                console.log('!!! Get Ushahidi User Access Token Fail !!!');
+                            }
+                        );
+                        
+                        // ------------------------------------------------------------------------------------------------- //
+
+                    } else {
+
+                        // ----------------------------------- Delete User Location Post ----------------------------------- // 
+
+                        var reqBody = {
+                            "username": $rootScope.userEmail.toString(),
+                            "password": $rootScope.userPassword.toString(), 
+                            "grant_type": "password",
+                            "client_id": "ushahidiui",
+                            "client_secret": "35e7f0bca957836d05ca0492211b0ac707671261",
+                            "scope": "posts media forms api tags savedsearches sets users stats layers config messages notifications contacts roles permissions csv dataproviders"
+                        };
+                        var Req = {
+                            method: 'POST', 
+                            url: 'http://140.109.22.155:3333/oauth/token', 
+                            headers: {},
+                            data: JSON.stringify(reqBody)
+                        }; 
+
+                        // Get Ushahidi User Access Token
+                        $http(Req).then(
+                            function(response){
+                                $scope.userToken = response.data.token_type.toString() + ' ' + response.data.access_token.toString();
+
+                                var post_reqHead = {
+                                    'Content-Type': 'application/json', 
+                                    'Authorization': $scope.userToken
+                                }; 
+                                var post_Req = {
+                                    method: 'DELETE', 
+                                    url: 'http://140.109.22.155:3333/api/v3/posts/'+$rootScope.userPostId.toString(), 
+                                    headers: post_reqHead
+                                };
+
+                                // Delete Post 
+                                $http(post_Req).then(
+                                    function(response){
+                                        console.log('!!! Delete Post '+$rootScope.userPostId+' !!!');
+                                        delete $rootScope.curstate;
+                                        delete $rootScope.userPostId;
+                                    }, 
+                                    function(response){
+                                        console.log('!!! Delete Post Fail !!!');
+                                    }
+                                );
+                            }, 
+                            function(response){
+                                console.log('!!! Get Ushahidi User Access Token Fail !!!');
+                            }
+                        ); 
+
+                        // ------------------------------------------------------------------------------------------------- //
+
+                    }
+// -------------------------------------------------------------------------------------------------------------------------------- //
+
                 };
 
                 $scope.cancel = function () {

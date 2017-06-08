@@ -19,23 +19,23 @@
           </div>
 
           <div class="form-field">
-              <label><input type="checkbox" name="checkattend" ng-model="curstate.attend" style="margin-right:10px;">參加志工回報任務</label>
+              <label><input type="checkbox" name="checkattend" ng-model="curstate.attend" style="margin-right:10px;">是否願意回報個人資訊</label>
               <label class="input-label" ng-show="curstate.attend"> 請回報以下資訊, 以便計畫管理者與您聯絡 </label>
           </div>
           <div class="form-field" ng-show="curstate.attend">
-              <label class="input-label"> 目前位置 </label>
-              <input ng-model="curstate.location">
+              <label class="input-label"> Current Location </label>
+              <report-location></report-location>
           </div>
           <div class="form-field" ng-show="curstate.attend">
-              <label class="input-label"> 目前聯絡電話 </label>
+              <label class="input-label"> Current Phone Number </label>
               <input ng-model="curstate.phone">
           </div>
           <div class="form-field" ng-show="curstate.attend">
-              <label class="input-label"> 目前聯絡電子郵件 </label>
+              <label class="input-label"> Current Email </label>
               <input ng-model="curstate.email">
           </div>
           <div class="form-field" ng-show="curstate.attend">
-              <label class="input-label"> 目前具備的交通工具 </label>
+              <label class="input-label"> Current Vehicles </label>
               <input ng-model="curstate.vehicle">
           </div>
 

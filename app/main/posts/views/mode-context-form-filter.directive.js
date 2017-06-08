@@ -22,6 +22,7 @@ function ModeContextFormFilter($scope, FormEndpoint, PostEndpoint, $q, _, $rootS
     activate();
 
     function activate() {
+
         // Load forms
         $scope.forms = FormEndpoint.query();
         var postCountRequest = PostEndpoint.stats({ group_by: 'form', status: 'all' });
@@ -43,6 +44,7 @@ function ModeContextFormFilter($scope, FormEndpoint, PostEndpoint, $q, _, $rootS
                 $scope.unknown_post_count = unknownValue.total;
             }
         });
+        
     }
 
     function showOnly(formId) {

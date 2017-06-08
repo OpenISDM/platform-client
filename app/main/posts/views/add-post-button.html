@@ -11,6 +11,7 @@
 
     <ul class="fab-options" ng-show="fabToggle" ng-class="{ 'active': fabToggle }" ng-style="fabOptionsStyle" data-toggle-animate="flex">
         <li ng-repeat="form in forms">
+        <div ng-if="form.id !== 7"> <!-- FormId:7 => Management Map -->
             <a ng-href="/posts/create/{{form.id}}">
                 <span class="fab-action-type" ng-style="{backgroundColor: form.color}">
                     <svg class="iconic">
@@ -19,6 +20,7 @@
                 </span>
                 <span class="bug">{{form.name}}</span>
             </a>
+        </div>
         </li>
     </ul>
 </div>

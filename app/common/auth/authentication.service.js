@@ -52,8 +52,6 @@ function (
 
         login: function (username, password) {
 
-            console.log('!!! Enter Login Function !!!');
-
             var payload = {
                 username: username,
                 password: password,
@@ -96,47 +94,9 @@ function (
 
 // Check IES-TSER Project Membership
 //-------------------------------------------------------------------------------------------------------------------------//
-            checkProjectMembership = function(response) {
-                var vmshead = response.headers();
+            checkProjectMembership = function() {
 
-                var Req = {
-                    method: 'GET', 
-                    url: 'https://vms-dev.herokuapp.com/api/attending_projects', 
-                    headers: {
-                        'Content-Type': 'application/json', 
-                        'X-VMS-API-Key': '581dba93a4dbafa42a682d36b015d8484622f8e3543623bec5a291f67f5ddff1',
-                        'Authorization': vmshead.authorization
-                    }
-                };
-
-                var checkproj = false;
-                $http(Req).then(
-                    function(response){
-                        var vmsproj = response.data;
-                        //console.log(vmsproj);
-
-                        for (var i = vmsproj.data.length - 1; i >= 0; i--) {
-                            if (vmsproj.data[i].id == 72 || vmsproj.data[i].id == 22) {
-                            //if (vmsproj.data[i].id == 1) {
-                                checkproj = true;
-                                console.log('!!! Project Membership: Checked !!!');
-                                $http.post(Util.url('/oauth/token'), payload).then(handleRequestSuccess, handleRequestError);
-                                break;
-                            } 
-                        }
-
-                        if (checkproj==false) {
-                            Notify.notify('Sorry, you are not a member of this project. Please join this project and login again.');
-                            handleRequestError();
-                        }
-                    }, handleRequestError);
-            };
- 
-//-------------------------------------------------------------------------------------------------------------------------//
-
-// Skip "checkProjectMembership" if Login as Admin
-//-------------------------------------------------------------------------------------------------------------------------//           
-            if (username !== 'admin') {
+                console.log('!!! VMS Membership: Checked !!!');
 
                 var credential = {
                     "email": username.toString(), 
@@ -153,8 +113,55 @@ function (
                     data: JSON.stringify(credential)
                 };
 
-                $http(Req).then(checkProjectMembership, handleRequestError);
-                //$http.post(Req.url,Req.data,{headers:Req.headers}).then(checkProjectMembership, handleRequestError);
+                $http(Req).then(
+                    function(response){
+
+                        var vmshead = response.headers();
+
+                        var cpmReq = {
+                            method: 'GET', 
+                            url: 'https://vms-dev.herokuapp.com/api/attending_projects', 
+                            headers: {
+                                'Content-Type': 'application/json', 
+                                'X-VMS-API-Key': '581dba93a4dbafa42a682d36b015d8484622f8e3543623bec5a291f67f5ddff1',
+                                'Authorization': vmshead.authorization
+                            }
+                        };
+
+                        var checkproj = false;
+                        $http(cpmReq).then(
+                            function(response){
+                                var vmsproj = response.data;
+                                //console.log(vmsproj);
+
+                                for (var i = vmsproj.data.length - 1; i >= 0; i--) {
+                                    if (vmsproj.data[i].id == 72 || vmsproj.data[i].id == 22) {
+                                    //if (vmsproj.data[i].id == 1) {
+                                        checkproj = true;
+                                        break;
+                                    } 
+                                }
+
+                                if (checkproj==false) {
+                                    console.log('!!! Project Membership: Fail !!!');
+                                    Notify.notify("Sorry, you haven't joined the appointed project in VMS. Please join the project and login again.");
+                                    handleRequestError();
+                                } else {
+                                    console.log('!!! Project Membership: Checked !!!');
+                                    $http.post(Util.url('/oauth/token'), payload).then(handleRequestSuccess, handleRequestError);
+                                }
+                            }, handleRequestError);
+                    }, handleRequestError);
+            };
+ 
+//-------------------------------------------------------------------------------------------------------------------------//
+
+// Skip "checkProjectMembership" if Login as Admin
+//-------------------------------------------------------------------------------------------------------------------------//           
+            if (username !== 'admin') {
+
+                $http.post(Util.url('/oauth/token'), payload).then(checkProjectMembership, handleRequestError);
+                //checkProjectMembership();
                 
             } else {
 
@@ -172,11 +179,74 @@ function (
 
         logout: function (silent) {
             //TODO: ASK THE BACKEND TO DESTROY SESSION
+            console.log('!!! Execute Logout Function !!!');
 
-            setToLogoutState();
+            // ----------------------------------- Delete User Location Post ----------------------------------- // 
+
+            if (typeof $rootScope.userPostId !== 'undefined') {
+                var reqBody = {
+                    "username": $rootScope.userEmail.toString(),
+                    "password": $rootScope.userPassword.toString(), 
+                    "grant_type": "password",
+                    "client_id": "ushahidiui",
+                    "client_secret": "35e7f0bca957836d05ca0492211b0ac707671261",
+                    "scope": "posts media forms api tags savedsearches sets users stats layers config messages notifications contacts roles permissions csv dataproviders"
+                };
+                var Req = {
+                    method: 'POST', 
+                    url: 'http://140.109.22.155:3333/oauth/token', 
+                    headers: {},
+                    data: JSON.stringify(reqBody)
+                }; 
+
+                // Get Ushahidi User Access Token
+                $http(Req).then(
+                    function(response){
+                        var userToken = response.data.token_type.toString() + ' ' + response.data.access_token.toString();
+
+                        var post_reqHead = {
+                            'Content-Type': 'application/json', 
+                            'Authorization': userToken
+                        }; 
+                        var post_Req = {
+                            method: 'DELETE', 
+                            url: 'http://140.109.22.155:3333/api/v3/posts/'+$rootScope.userPostId.toString(), 
+                            headers: post_reqHead
+                        };
+
+                        // Delete Post 
+                        $http(post_Req).then(
+                            function(response){
+                                console.log('!!! Delete Post '+$rootScope.userPostId+' !!!');
+                                delete $rootScope.curstate;
+                                delete $rootScope.userPostId;
+                                setToLogoutState();
+                                if (!silent) {
+                                    $rootScope.$broadcast('event:authentication:logout:succeeded');
+                                }
+                            }, 
+                            function(response){
+                                console.log('!!! Delete Post Fail !!!');
+                            }
+                        );
+                    }, 
+                    function(response){
+                        console.log('!!! Get Ushahidi User Access Token Fail !!!');
+                    }
+                );
+            } else {
+                setToLogoutState();
+                if (!silent) {
+                    $rootScope.$broadcast('event:authentication:logout:succeeded');
+                }
+            }
+
+            // ------------------------------------------------------------------------------------------------- //
+
+            /*setToLogoutState();
             if (!silent) {
                 $rootScope.$broadcast('event:authentication:logout:succeeded');
-            }
+            }*/
         },
 
         getLoginStatus: function () {

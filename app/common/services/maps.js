@@ -84,7 +84,7 @@ function Maps(ConfigEndpoint, L, _, CONST) {
                 strings: {
                     title: 'Show me where I am.'
                 },
-            position: 'bottomleft',
+                position: 'bottomleft',
                 //keepCurrentZoomLevel: true,
                 circleStyle: {
                     color: '#FF0000',
@@ -98,11 +98,14 @@ function Maps(ConfigEndpoint, L, _, CONST) {
                     maxZoom: 15
                 },
             }).addTo(map);
-            //userlocate.start();
-            //userlocate.stop();
             userlocate = L.control.locate({
                 keepCurrentZoomLevel: false, //keep the same zoom level
                 showPopup: true
+            });
+            //userlocate.start();
+            //userlocate.stop();
+            map.on('locationfound', function (e) {
+                console.log(e.latlng, e.accuracy)
             });
 //-------------------------------------------------------//
             return map;
