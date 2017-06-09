@@ -87,11 +87,92 @@ function (
                             deferred.resolve();
                         });
                     }, handleRequestError);
-            };
+            },
 
-            $http.post(Util.url('/oauth/token'), payload).then(handleRequestSuccess, handleRequestError);
+// Check IES-TSER Project Membership
+//-------------------------------------------------------------------------------------------------------------------------//
+            checkProjectMembership = function() {
+
+                console.log('!!! VMS Membership: Checked !!!');
+
+                var credential = {
+                    "email": username.toString(), 
+                    "password": password.toString() 
+                };
+
+                var Req = {
+                    method: 'POST', 
+                    url: 'https://vms-dev.herokuapp.com/api/auth', 
+                    headers: {
+                        'Content-Type': 'application/json', 
+                        'X-VMS-API-Key': '581dba93a4dbafa42a682d36b015d8484622f8e3543623bec5a291f67f5ddff1'
+                    }, 
+                    data: JSON.stringify(credential)
+                };
+
+                $http(Req).then(
+                    function(response){
+
+                        var vmshead = response.headers();
+
+                        var cpmReq = {
+                            method: 'GET', 
+                            url: 'https://vms-dev.herokuapp.com/api/attending_projects', 
+                            headers: {
+                                'Content-Type': 'application/json', 
+                                'X-VMS-API-Key': '581dba93a4dbafa42a682d36b015d8484622f8e3543623bec5a291f67f5ddff1',
+                                'Authorization': vmshead.authorization
+                            }
+                        };
+
+                        var checkproj = false;
+                        $http(cpmReq).then(
+                            function(response){
+                                var vmsproj = response.data;
+                                //console.log(vmsproj);
+
+                                for (var i = vmsproj.data.length - 1; i >= 0; i--) {
+                                    if (vmsproj.data[i].id == 72 || vmsproj.data[i].id == 22) {
+                                    //22:台灣地震科學志工--環境災害志工報案系統 / 72:1012 test group
+                                        checkproj = true;
+                                        break;
+                                    } 
+                                }
+
+                                if (checkproj==false) {
+                                    console.log('!!! Project Membership: Fail !!!');
+                                    Notify.notify("Sorry, you haven't joined the appointed project in VMS. Please join the project and login again.");
+                                    handleRequestError();
+                                } else {
+                                    console.log('!!! Project Membership: Checked !!!');
+                                    $http.post(Util.url('/oauth/token'), payload).then(handleRequestSuccess, handleRequestError);
+                                }
+                            }, handleRequestError);
+                    }, handleRequestError);
+            };
+ 
+//-------------------------------------------------------------------------------------------------------------------------//
+
+// Skip "checkProjectMembership" if Login as Admin
+//-------------------------------------------------------------------------------------------------------------------------//           
+            if (username !== 'admin') {
+
+                $http.post(Util.url('/oauth/token'), payload).then(checkProjectMembership, handleRequestError);
+                //checkProjectMembership();
+                
+            } else {
+
+                $http.post(Util.url('/oauth/token'), payload).then(handleRequestSuccess, handleRequestError);
+
+            }
 
             return deferred.promise;
+            
+//-------------------------------------------------------------------------------------------------------------------------//
+
+            //$http.post(Util.url('/oauth/token'), payload).then(handleRequestSuccess, handleRequestError);
+
+            //return deferred.promise;
         },
 
         logout: function (silent) {
