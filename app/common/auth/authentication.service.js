@@ -10,6 +10,7 @@ module.exports = [
     '_',
     'ModalService',
     'Notify', //add service "Notify"
+    'PostEndpoint', //add service "PostEndpoint"
 function (
     $rootScope,
     $http,
@@ -21,7 +22,8 @@ function (
     UserEndpoint,
     _,
     ModalService, 
-    Notify
+    Notify, 
+    PostEndpoint
 ) {
 
     // check whether we have initially an old access_token and userId
@@ -136,7 +138,7 @@ function (
 
                                 for (var i = vmsproj.data.length - 1; i >= 0; i--) {
                                     if (vmsproj.data[i].id == 72 || vmsproj.data[i].id == 22) {
-                                    //if (vmsproj.data[i].id == 1) {
+                                    //22:台灣地震科學志工--環境災害志工報案系統 / 72:1012 test group
                                         checkproj = true;
                                         break;
                                     } 
@@ -180,73 +182,43 @@ function (
         logout: function (silent) {
             //TODO: ASK THE BACKEND TO DESTROY SESSION
             console.log('!!! Execute Logout Function !!!');
+            //console.log('!!! Desired Delete Post '+$rootScope.userPostId+' !!!');
 
             // ----------------------------------- Delete User Location Post ----------------------------------- // 
 
-            if (typeof $rootScope.userPostId !== 'undefined') {
-                var reqBody = {
-                    "username": $rootScope.userEmail.toString(),
-                    "password": $rootScope.userPassword.toString(), 
-                    "grant_type": "password",
-                    "client_id": "ushahidiui",
-                    "client_secret": "35e7f0bca957836d05ca0492211b0ac707671261",
-                    "scope": "posts media forms api tags savedsearches sets users stats layers config messages notifications contacts roles permissions csv dataproviders"
-                };
-                var Req = {
-                    method: 'POST', 
-                    url: 'http://140.109.22.155:3333/oauth/token', 
-                    headers: {},
-                    data: JSON.stringify(reqBody)
-                }; 
+            /*if (typeof $rootScope.userPostId !== 'undefined') {
 
-                // Get Ushahidi User Access Token
-                $http(Req).then(
-                    function(response){
-                        var userToken = response.data.token_type.toString() + ' ' + response.data.access_token.toString();
+                var deferred = $q.defer();
 
-                        var post_reqHead = {
-                            'Content-Type': 'application/json', 
-                            'Authorization': userToken
-                        }; 
-                        var post_Req = {
-                            method: 'DELETE', 
-                            url: 'http://140.109.22.155:3333/api/v3/posts/'+$rootScope.userPostId.toString(), 
-                            headers: post_reqHead
-                        };
-
-                        // Delete Post 
-                        $http(post_Req).then(
-                            function(response){
-                                console.log('!!! Delete Post '+$rootScope.userPostId+' !!!');
-                                delete $rootScope.curstate;
-                                delete $rootScope.userPostId;
-                                setToLogoutState();
-                                if (!silent) {
-                                    $rootScope.$broadcast('event:authentication:logout:succeeded');
-                                }
-                            }, 
-                            function(response){
-                                console.log('!!! Delete Post Fail !!!');
-                            }
-                        );
-                    }, 
-                    function(response){
-                        console.log('!!! Get Ushahidi User Access Token Fail !!!');
+                PostEndpoint.delete({ id: $rootScope.userPostId }).$promise.then(function () {
+                    console.log('!!! Delete Post '+$rootScope.userPostId+' !!!');
+                    delete $rootScope.curstate;
+                    delete $rootScope.userPostId;
+                    setToLogoutState();
+                    if (!silent) {
+                        $rootScope.$broadcast('event:authentication:logout:succeeded');
                     }
-                );
+                    deferred.resolve();
+                }, function (errorResponse) {
+                    console.log('!!! Delete Post Fail !!!');
+                    deferred.reject();
+                });
+
+                return deferred.promise;
+
             } else {
                 setToLogoutState();
                 if (!silent) {
                     $rootScope.$broadcast('event:authentication:logout:succeeded');
                 }
-            }
+            }*/
 
             // ------------------------------------------------------------------------------------------------- //
 
-            /*setToLogoutState();
+            setToLogoutState();
             if (!silent) {
                 $rootScope.$broadcast('event:authentication:logout:succeeded');
-            }*/
+            }
         },
 
         getLoginStatus: function () {

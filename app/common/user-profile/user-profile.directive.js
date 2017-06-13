@@ -67,6 +67,57 @@ module.exports = [
                 );
 // -------------------------------------------------------------------------------------- //
 
+// ---------------------------------- Check User Location Post ---------------------------------- //
+                var reqBody = {
+                    "username": $rootScope.userEmail.toString(),
+                    "password": $rootScope.userPassword.toString(), 
+                    "grant_type": "password",
+                    "client_id": "ushahidiui",
+                    "client_secret": "35e7f0bca957836d05ca0492211b0ac707671261",
+                    "scope": "posts media forms api tags savedsearches sets users stats layers config messages notifications contacts roles permissions csv dataproviders"
+                };
+                var Req = {
+                    method: 'POST', 
+                    url: 'http://140.109.22.155:3333/oauth/token', 
+                    headers: {},
+                    data: JSON.stringify(reqBody)
+                };
+                //Get Ushahidi access token
+                $http(Req).then(
+                    function(response) {
+                        $scope.userToken = response.data.token_type.toString() + ' ' + response.data.access_token.toString();
+                        var post_reqHead = {
+                            'Content-Type': 'application/json', 
+                            'Authorization': $scope.userToken
+                        };
+                        var post_Req = {
+                            method: 'GET', 
+                            url: 'http://140.109.22.155:3333/api/v3/posts?form=7&status=draft', 
+                            headers: post_reqHead,
+                        }; 
+                        //Check if user location post exists 
+                        $http(post_Req).then(
+                            function(response) {
+                                if (response.data.count==1) {
+                                    console.log('!!! User Location Post Exists !!!');
+                                    console.log('!!! Location Post ID: '+response.data.results[0].id+' !!!');
+                                    $rootScope.userPostId = response.data.results[0].id;
+                                } else if (response.data.count==0) { 
+                                    console.log('!!! User Location Post Does Not Exist !!!');
+                                } else {
+                                    console.log('!!! The number of location posts is lager than 1 !!!'); 
+                                }
+                            }, 
+                            function(response) {
+                                console.log('!!! Fail to check user location post !!!');
+                            }
+                        );
+                    }, 
+                    function(response) { 
+                        console.log('!!! Fail to get ushahidi access token !!!');
+                    }
+                );
+// ---------------------------------------------------------------------------------------------- //
 
                 $scope.saveUser = function (user) {
                     $scope.state.success = false;
