@@ -81,7 +81,9 @@ function LoginController(
     
     // open user profile
     function openProfile() {
-        ModalService.openTemplate('<account-settings></account-settings>', '', false, false, true, true);
+        if ($scope.failed == false) {
+            ModalService.openTemplate('<account-settings></account-settings>', '', false, false, true, true);
+        }
     }
 
     function loginSubmit(email, password) {
