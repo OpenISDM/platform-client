@@ -18,6 +18,8 @@ function IntroController($scope, $translate, moment, Features) {
         $scope.guestcolor = {"color":"blue"};
         $scope.vmsshow = false;
         $scope.vmscolor = {"color":"blue"};
+        $scope.joinshow = false;
+        $scope.joincolor = {"color":"blue"};
     }
 
     $scope.expandguest = function() {
@@ -35,6 +37,15 @@ function IntroController($scope, $translate, moment, Features) {
             $scope.vmscolor = {"color":"black"};
         } else {
             $scope.vmscolor = {"color":"blue"};
+        }
+    }
+
+    $scope.expandjoin = function() {
+        $scope.joinshow = !$scope.joinshow;
+        if ($scope.joinshow) {
+            $scope.joincolor = {"color":"black"};
+        } else {
+            $scope.joincolor = {"color":"blue"};
         }
     }
 }

@@ -9,6 +9,7 @@ module.exports = [
     'UserEndpoint',
     '_',
     'ModalService',
+    'Notify',
 function (
     $rootScope,
     $http,
@@ -19,7 +20,8 @@ function (
     RoleEndpoint,
     UserEndpoint,
     _,
-    ModalService
+    ModalService, 
+    Notify
 ) {
 
     // check whether we have initially an old access_token and userId
@@ -141,7 +143,7 @@ function (
 
                                 if (checkproj==false) {
                                     console.log('!!! Project Membership: Fail !!!');
-                                    Notify.notify("Sorry, you haven't joined the appointed project in VMS. Please join the project and login again.");
+                                    Notify.notify("您尚未加入志工專案「台灣地震科學志工--環境災害志工報案系統」，請參閱「說明」。");
                                     handleRequestError();
                                 } else {
                                     console.log('!!! Project Membership: Checked !!!');
