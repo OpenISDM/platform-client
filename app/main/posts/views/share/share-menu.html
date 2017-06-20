@@ -61,6 +61,7 @@
 							</div>
 					</div>
 
+					<div ng-show="isAdmin()">
 					<div class="listing-item" ng-show="isExportable()">
 							<div class="listing-item-primary">
 									<div class="listing-item-image">
@@ -72,6 +73,7 @@
 										<post-export filters="filters"></post-export>
 									</h2>
 							</div>
+					</div>
 					</div>
 			</div>
     </form>

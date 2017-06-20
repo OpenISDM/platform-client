@@ -18,6 +18,7 @@
                translate="{{'user.valid.full_name.' + error}}"></p>
           </div>
 
+          <div ng-show="!isAdmin()">
           <div class="form-field">
               <label><input type="checkbox" name="checkattend" ng-model="curstate.attend" style="margin-right:10px;">是否願意回報個人資訊</label>
               <label class="input-label" ng-show="curstate.attend"> 請回報以下資訊, 以便計畫管理者與您聯絡 </label>
@@ -37,6 +38,7 @@
           <div class="form-field" ng-show="curstate.attend">
               <label class="input-label"> Current Vehicles </label>
               <input ng-model="curstate.vehicle">
+          </div>
           </div>
 
           <!--<div class="form-field">

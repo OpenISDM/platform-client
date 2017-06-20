@@ -14,17 +14,20 @@ ShareMenuController.$inject = [
     '$scope',
     '$routeParams',
     'Util',
-    '$window'
+    '$window', 
+    '$rootScope'
 ];
 function ShareMenuController(
     $scope,
     $routeParams,
     Util,
-    $window
+    $window, 
+    $rootScope
 ) {
     $scope.loading = false;
     $scope.shareUrl = Util.currentUrl();
     $scope.isExportable = isExportable;
+    $scope.isAdmin = $rootScope.isAdmin;
 
     activate();
 

@@ -25,20 +25,8 @@ module.exports = [
                     changingPassword: false,
                     password: '' 
                 };
-                
-// ---------------------------------- Load User Current State ---------------------------------- // 
-                if (typeof $rootScope.curstate == 'undefined') {
-                    $scope.curstate = {
-                        attend: false,
-                        location: '',
-                        email: '',
-                        phone: '',
-                        vehicle: ''
-                    };
-                } else {
-                    $scope.curstate = $rootScope.curstate;
-                }
-// --------------------------------------------------------------------------------------------- // 
+
+                $scope.isAdmin = $rootScope.isAdmin; 
 
 // ---------------------------------- Load VMS Profile ---------------------------------- //
                 var vms_reqBody = {
@@ -98,14 +86,45 @@ module.exports = [
                         //Check if user location post exists 
                         $http(post_Req).then(
                             function(response) {
-                                if (response.data.count==1) {
-                                    console.log('!!! User Location Post Exists !!!');
-                                    console.log('!!! Location Post ID: '+response.data.results[0].id+' !!!');
-                                    $rootScope.userPostId = response.data.results[0].id;
-                                } else if (response.data.count==0) { 
-                                    console.log('!!! User Location Post Does Not Exist !!!');
+                                if ($scope.isAdmin()) { 
+                                    $scope.curstate = {
+                                        attend: false,
+                                        location: '',
+                                        phone: '',
+                                        email: '',
+                                        vehicle: ''
+                                    };
                                 } else {
-                                    console.log('!!! The number of location posts is lager than 1 !!!'); 
+                                    if (response.data.count==1) {
+                                        console.log('!!! User Location Post Exists !!!');
+                                        console.log('!!! Location Post ID: '+response.data.results[0].id+' !!!');
+                                        $rootScope.userPostId = response.data.results[0].id;
+                                        var templ = response.data.results[0].values['9b56eb4c-3374-4c13-842b-6c33f535eb8f']; 
+                                        var tempp = response.data.results[0].values['ce7ff9e3-9f37-4f3a-aa29-7cc0ac1b4fa1']; 
+                                        var tempe = response.data.results[0].values['7be1ac62-de02-49eb-a3fb-facaf8d44802']; 
+                                        var tempv = response.data.results[0].values['fac18c33-451b-48cc-a085-745f63810868'];
+                                        $scope.curstate = {
+                                            attend: true,
+                                            location: templ[0],
+                                            phone: tempp[0],
+                                            email: tempe[0],
+                                            vehicle: tempv[0]
+                                        };
+                                        console.log($scope.curstate);
+                                        $rootScope.curstate = $scope.curstate;
+
+                                    } else if (response.data.count==0) { 
+                                        console.log('!!! User Location Post Does Not Exist !!!');
+                                        $scope.curstate = {
+                                            attend: false,
+                                            location: '',
+                                            phone: '',
+                                            email: '',
+                                            vehicle: ''
+                                        };
+                                    } else {
+                                        console.log('!!! The number of location posts is lager than 1 !!!'); 
+                                    }
                                 }
                             }, 
                             function(response) {
@@ -362,7 +381,7 @@ module.exports = [
                         
                         // ------------------------------------------------------------------------------------------------- //
 
-                    } else {
+                    } else if ($scope.curstate.attend == false && typeof $rootScope.userPostId !== 'undefined') {
 
                         // ----------------------------------- Delete User Location Post ----------------------------------- // 
 
@@ -415,6 +434,8 @@ module.exports = [
 
                         // ------------------------------------------------------------------------------------------------- //
 
+                    } else {
+                        // User isn't willing to report current location and also user location post doesn't exist.  
                     }
 // -------------------------------------------------------------------------------------------------------------------------------- //
 

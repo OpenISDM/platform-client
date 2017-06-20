@@ -182,38 +182,8 @@ function (
         logout: function (silent) {
             //TODO: ASK THE BACKEND TO DESTROY SESSION
             console.log('!!! Execute Logout Function !!!');
-            //console.log('!!! Desired Delete Post '+$rootScope.userPostId+' !!!');
-
-            // ----------------------------------- Delete User Location Post ----------------------------------- // 
-
-            /*if (typeof $rootScope.userPostId !== 'undefined') {
-
-                var deferred = $q.defer();
-
-                PostEndpoint.delete({ id: $rootScope.userPostId }).$promise.then(function () {
-                    console.log('!!! Delete Post '+$rootScope.userPostId+' !!!');
-                    delete $rootScope.curstate;
-                    delete $rootScope.userPostId;
-                    setToLogoutState();
-                    if (!silent) {
-                        $rootScope.$broadcast('event:authentication:logout:succeeded');
-                    }
-                    deferred.resolve();
-                }, function (errorResponse) {
-                    console.log('!!! Delete Post Fail !!!');
-                    deferred.reject();
-                });
-
-                return deferred.promise;
-
-            } else {
-                setToLogoutState();
-                if (!silent) {
-                    $rootScope.$broadcast('event:authentication:logout:succeeded');
-                }
-            }*/
-
-            // ------------------------------------------------------------------------------------------------- //
+            delete $rootScope.curstate;
+            delete $rootScope.userPostId;
 
             setToLogoutState();
             if (!silent) {

@@ -24,21 +24,37 @@
                    <div class="listing-item-primary">
                        <h2 class="listing-item-title" style="font-size:20px;"><a ng-style="guestcolor" ng-click="expandguest()">訪客操作流程</a></h2>
                        <p class="listing-item-secondary" style="font-size:15px;">
-                       災害發生時，為了能夠讓我們和您聯絡，我們鼓勵您<a href="http://openisdm.github.io/volunteer/#/register-privacy" target="_blank" style="color:blue;">加入成為志工</a>
+                       災害發生時，為了能夠讓我們和您聯絡，我們鼓勵您成為地震科學志工
                        </p> 
                        <div ng-show="guestshow">
                        <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">1. 點選 "黃色圓圈加號"</p>
-                       <img src="/introimg/AddPost.png"/>
+                       <p class="listing-item-secondary" style="font-size:15px;">1. 點選「黃色圓圈加號」</p>
+                       <img src="/introimg/intro_guest_circle.png"/>
                        <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">2. 選擇日期正確的項目來回報</p>
+                       <!--<p class="listing-item-secondary" style="font-size:15px;">2. 選擇日期正確的項目來回報</p>
                        <img src="/introimg/SelectSurvey.png"/>
+                       <p></p>-->
+                       <p class="listing-item-secondary" style="font-size:15px;">3. 完成表單填寫並點選「發佈」</p>
+                       <img src="/introimg/intro_guest_form.png"/>
                        <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">3. 完成表單填寫並點選 "發佈"</p>
-                       <img src="/introimg/EditPost.png"/>
-                       <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">※ 我們鼓勵您點選 "註冊" 成為志工，手機介面能夠在 "更多" 中找到</p>
+                       <!--<p class="listing-item-secondary" style="font-size:15px;">※ 我們鼓勵您點選 "註冊" 成為志工，手機介面能夠在 "更多" 中找到</p>
                        <img src="/introimg/GuestSignIn.png"/>
+                       <p></p>-->
+                       </div>
+                   </div>
+               </div>
+               <div class="listing-item">
+                   <div class="listing-item-primary">
+                       <h2 class="listing-item-title" style="font-size:20px;"><a ng-style="joincolor" ng-click="expandjoin()">成為地震科學志工</a></h2>
+                       <div ng-show="joinshow">
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">1. 進入志工管理系統並<a href="http://openisdm.github.io/volunteer/#/register-privacy" target="_blank" style="color:blue;">註冊成為志工</a></p>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">2. 登入志工管理系統後，點選「專案」內的「所有專案」並選擇「台灣地震科學志工--環境災害志工報案系統」</p>
+                       <img src="/introimg/intro_join_list.png"/>
+                       <p></p>
+                       <p class="listing-item-secondary" style="font-size:15px;">3. 最後點選「加入」</p>
+                       <img src="/introimg/intro_join_project.png"/>
                        <p></p>
                        </div>
                    </div>
@@ -48,22 +64,19 @@
                        <h2 class="listing-item-title" style="font-size:20px;"><a ng-style="vmscolor" ng-click="expandvms()">志工操作流程</a></h2>
                        <div ng-show="vmsshow">
                        <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">1. 點選 "登入"，帳號為註冊時填寫的Email</p>
-                       <img src="/introimg/UserLogin.png"/>
+                       <p class="listing-item-secondary" style="font-size:15px;">1. 點選「志工登入」，帳號為註冊志工管理系統時填寫的Email</p>
+                       <img src="/introimg/intro_member_login.png"/>
                        <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">2. 登入後，確認或修改您的顯示名稱並 "儲存"</p>
-                       <img src="/introimg/SetDisplayName.png"/>
+                       <p class="listing-item-secondary" style="font-size:15px;">2. 登入後，確認或修改您的顯示名稱</p>
+                       <img src="/introimg/intro_member_name.png"/>
 		                   <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">3. 點選 "黃色圓圈加號"</p>
-                       <img src="/introimg/AddPost.png"/>
+                       <p class="listing-item-secondary" style="font-size:15px;">3. 點選「黃色圓圈加號」，選擇標有[志工專用]且日期正確的項目來回報</p>
+                       <img src="/introimg/intro_member_post.png"/>
                        <p></p> 
-                       <p class="listing-item-secondary" style="font-size:15px;">4. 選擇標有[志工專用]且日期正確的項目來回報</p>
-                       <img src="/introimg/SelectSurveyVMS.png"/>
+                       <p class="listing-item-secondary" style="font-size:15px;">4. 完成表單填寫並點選「發佈」</p>
+                       <img src="/introimg/intro_member_form.png"/>
                        <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">5. 完成表單填寫並點選 "發佈"</p>
-                       <img src="/introimg/EditPostVMS.png"/>
-                       <p></p>
-                       <p class="listing-item-secondary" style="font-size:15px;">6. 另外，若您已成為志工，您將會在事件發生時收到Email通知信</p>
+                       <p class="listing-item-secondary" style="font-size:15px;">5. 另外，若您已成為地震科學志工，您將會在事件發生時收到Email通知信</p>
                        </div>
                    </div>
                </div>
